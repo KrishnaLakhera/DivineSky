@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import ProductCard from "../components/Catalog/ProductCard";
-import "../styles/Catalog/catalog.css";
+import "../styles/Catalog/Catalog.css";
 
 export default function Catalog({ search }) {
   const [products, setProducts] = useState([]);
