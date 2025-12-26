@@ -85,7 +85,7 @@ export default function EditProduct() {
       setLoading(true);
       const token = localStorage.getItem("admin_token");
       const response = await fetch(
-        `http://localhost:5000/admin/products/${category}/${id}`,
+        `https://divinesky.onrender.com/admin/products/${category}/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -184,7 +184,7 @@ export default function EditProduct() {
       const token = localStorage.getItem("admin_token");
       
       const response = await fetch(
-        `http://localhost:5000/admin/products/${category}/${id}/remove-image`,
+        `https://divinesky.onrender.com/admin/products/${category}/${id}/remove-image`,
         {
           method: "PATCH",
           headers: {
@@ -221,7 +221,7 @@ export default function EditProduct() {
       formData.append("removeModel", "true");
 
       const response = await fetch(
-        `http://localhost:5000/admin/products/${category}/${id}`,
+        `https://divinesky.onrender.com/admin/products/${category}/${id}`,
         {
           method: "PUT",
           headers: {
@@ -257,7 +257,7 @@ export default function EditProduct() {
       formData.append("removeVideo", "true");
 
       const response = await fetch(
-        `http://localhost:5000/admin/products/${category}/${id}`,
+        `https://divinesky.onrender.com/admin/products/${category}/${id}`,
         {
           method: "PUT",
           headers: {
@@ -351,7 +351,7 @@ export default function EditProduct() {
       }
 
       const response = await fetch(
-        `http://localhost:5000/admin/products/${category}/${id}`,
+        `https://divinesky.onrender.com/admin/products/${category}/${id}`,
         {
           method: "PUT",
           headers: {

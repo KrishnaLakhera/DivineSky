@@ -27,7 +27,7 @@ export default function ProductDetail() {
 
       console.log("Fetching product:", id, "from category:", category);
 
-      const response = await fetch(`http://localhost:5000/products/${category}/${id}`);
+      const response = await fetch(`https://divinesky.onrender.com/products/${category}/${id}`);
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

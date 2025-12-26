@@ -82,11 +82,11 @@ export default function Catalog({ search }) {
       console.log("📥 Fetching products...");
       console.log("Category:", selectedCategory);
 
-      let url = "http://localhost:5000/products";
+      let url = "https://divinesky.onrender.com/products";
       
       // If specific category selected, fetch only that category
       if (selectedCategory !== "all") {
-        url = `http://localhost:5000/products/${selectedCategory}`;
+        url = `https://divinesky.onrender.com/products/${selectedCategory}`;
       }
 
       console.log("Fetching from:", url);

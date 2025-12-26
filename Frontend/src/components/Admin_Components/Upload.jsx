@@ -213,7 +213,7 @@ export default function Upload() {
     console.log("Video:", video ? video.name : "No video");
 
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://localhost:5000/admin/upload");
+    xhr.open("POST", "https://divinesky.onrender.com/admin/upload");
 
     const token = localStorage.getItem("admin_token");
     if (token) {

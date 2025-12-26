@@ -16,7 +16,7 @@ export default function ManageProducts() {
   const fetchAllProducts = async () => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:5000/products");
+      const response = await fetch("https://divinesky.onrender.com/products");
       const data = await response.json();
       
       if (data.success) {
@@ -38,7 +38,7 @@ export default function ManageProducts() {
     try {
       const token = localStorage.getItem("admin_token");
       const response = await fetch(
-        `http://localhost:5000/admin/products/${product.category}/${product.id}`,
+        `https://divinesky.onrender.com/admin/products/${product.category}/${product.id}`,
         {
           method: "DELETE",
           headers: {
