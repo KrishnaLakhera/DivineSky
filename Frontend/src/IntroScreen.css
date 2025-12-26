@@ -1,0 +1,553 @@
+/* ================================
+   INTRO WRAPPER - EYE COMFORT OPTIMIZED
+================================ */
+.intro-wrapper {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, #1a1f35 0%, #2d3748 50%, #1e2a3a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  z-index: 9999;
+  cursor: none;
+}
+
+/* ================================
+   SOFT AMBIENT BACKGROUND
+================================ */
+.intro-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 30% 40%, rgba(212,175,55,0.08), transparent 50%),
+    radial-gradient(circle at 70% 60%, rgba(139,92,246,0.06), transparent 55%),
+    radial-gradient(circle at 50% 80%, rgba(59,130,246,0.04), transparent 50%);
+  animation: bgBreath 18s ease-in-out infinite;
+}
+
+/* ================================
+   GENTLE GLOW
+================================ */
+.intro-glow {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(
+    circle,
+    rgba(212,175,55,0.25),
+    rgba(234,179,8,0.12) 40%,
+    transparent 70%
+  );
+  filter: blur(120px);
+  animation: glowGentle 10s ease-in-out infinite;
+}
+
+/* ================================
+   ANIMATED DIVINE LOGO ICON
+================================ */
+.intro-divine-logo {
+  width: 90px;
+  height: 90px;
+  margin: 0 auto 2rem;
+  position: relative;
+  animation: logoFloat 6s ease-in-out infinite;
+}
+
+.logo-ring {
+  position: absolute;
+  inset: 0;
+  border: 2px solid rgba(212,175,55,0.25);
+  border-radius: 50%;
+  animation: ringRotate 12s linear infinite;
+}
+
+.logo-ring:nth-child(2) {
+  inset: 10px;
+  border-color: rgba(212,175,55,0.18);
+  animation: ringRotate 9s linear infinite reverse;
+}
+
+.logo-ring:nth-child(3) {
+  inset: 20px;
+  border-color: rgba(212,175,55,0.12);
+  animation: ringRotate 15s linear infinite;
+}
+
+.logo-center {
+  position: absolute;
+  inset: 28px;
+  background: radial-gradient(circle, rgba(212,175,55,0.6), rgba(212,175,55,0.2));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  color: #fff;
+  animation: centerPulse 4s ease-in-out infinite;
+  box-shadow: 0 0 30px rgba(212,175,55,0.4);
+}
+
+/* ================================
+   CONTENT CONTAINER
+================================ */
+.intro-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: #f1f5f9;
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+.intro-logo-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* ================================
+   MAIN LOGO TEXT
+================================ */
+.intro-logo {
+  font-size: 4.5rem;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  position: relative;
+  transform-style: preserve-3d;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+}
+
+.intro-logo span {
+  background: linear-gradient(
+    135deg,
+    #e5c063 0%,
+    #f4d56f 25%,
+    #ffd966 50%,
+    #f4d56f 75%,
+    #e5c063 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 5s linear infinite;
+  filter:
+    drop-shadow(0 2px 8px rgba(212,175,55,0.4))
+    drop-shadow(0 0 20px rgba(212,175,55,0.3));
+  will-change: transform;
+}
+
+/* Elegant underline */
+.intro-logo::after {
+  content: "";
+  position: absolute;
+  bottom: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(212,175,55,0.6), transparent);
+  opacity: 0.8;
+  animation: lineGlow 5s ease-in-out infinite;
+}
+
+/* ================================
+   DECORATIVE STARS
+================================ */
+.intro-content::before,
+.intro-content::after {
+  content: "✦";
+  position: absolute;
+  font-size: 1.8rem;
+  color: rgba(212,175,55,0.6);
+  top: 50%;
+  transform: translateY(-50%);
+  animation: starTwinkle 3s ease-in-out infinite;
+}
+
+.intro-content::before {
+  left: -50px;
+  animation-delay: 0s;
+}
+
+.intro-content::after {
+  right: -50px;
+  animation-delay: 1.5s;
+}
+
+/* ================================
+   TAGLINE
+================================ */
+.intro-tagline {
+  margin-top: 3rem;
+  font-size: 1.15rem;
+  max-width: 500px;
+  opacity: 0.88;
+  line-height: 1.7;
+  letter-spacing: 0.06em;
+  font-weight: 300;
+  color: #e2e8f0;
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+.intro-tagline::before {
+  content: "";
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212,175,55,0.4), transparent);
+  animation: lineExpand 2s ease-out 3s forwards;
+}
+
+/* ================================
+   SUBTLE SHINE EFFECT
+================================ */
+.intro-shine {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    110deg,
+    transparent 40%,
+    rgba(255,255,255,0.15) 50%,
+    transparent 60%
+  );
+  animation: shine 6s ease-in-out 3s infinite;
+  pointer-events: none;
+}
+
+/* ================================
+   FLOATING PARTICLES (FEWER & SLOWER)
+================================ */
+.intro-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  background: rgba(212,175,55,0.6);
+  border-radius: 50%;
+  opacity: 0;
+  animation: particleFloat 12s ease-in-out infinite;
+  box-shadow: 0 0 6px rgba(212,175,55,0.8);
+}
+
+/* ================================
+   SOFT GRID OVERLAY
+================================ */
+.grid-overlay {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(212,175,55,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(212,175,55,0.02) 1px, transparent 1px);
+  background-size: 60px 60px;
+  animation: gridMove 30s linear infinite;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* ================================
+   AMBIENT ORBS
+================================ */
+.floating-orbs {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(212,175,55,0.15), transparent 65%);
+  filter: blur(40px);
+  animation: orbFloat 25s ease-in-out infinite;
+}
+
+.orb:nth-child(1) {
+  width: 250px;
+  height: 250px;
+  top: 15%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.orb:nth-child(2) {
+  width: 200px;
+  height: 200px;
+  top: 60%;
+  right: 15%;
+  animation-delay: -8s;
+}
+
+.orb:nth-child(3) {
+  width: 180px;
+  height: 180px;
+  bottom: 25%;
+  left: 25%;
+  animation-delay: -15s;
+}
+
+/* ================================
+   CUSTOM CURSOR
+================================ */
+.custom-cursor {
+  position: fixed;
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(212,175,55,0.5);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 10000;
+  transition: transform 0.2s ease-out;
+  mix-blend-mode: screen;
+}
+
+.custom-cursor::before {
+  content: "";
+  position: absolute;
+  inset: -12px;
+  border: 1px solid rgba(212,175,55,0.15);
+  border-radius: 50%;
+  animation: cursorPulse 3s ease-in-out infinite;
+}
+
+/* ================================
+   FILM GRAIN (VERY SUBTLE)
+================================ */
+.intro-wrapper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E");
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* ================================
+   ANIMATIONS
+================================ */
+@keyframes bgBreath {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes glowGentle {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1) translate(0, 0);
+  }
+  33% {
+    opacity: 0.65;
+    transform: scale(1.08) translate(10px, -10px);
+  }
+  66% {
+    opacity: 0.58;
+    transform: scale(0.95) translate(-10px, 10px);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes logoFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-12px) rotate(180deg);
+  }
+}
+
+@keyframes ringRotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes centerPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 25px rgba(212,175,55,0.4);
+  }
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 0 35px rgba(212,175,55,0.6);
+  }
+}
+
+@keyframes lineGlow {
+  0%, 100% {
+    opacity: 0.5;
+    width: 70%;
+  }
+  50% {
+    opacity: 0.9;
+    width: 85%;
+  }
+}
+
+@keyframes starTwinkle {
+  0%, 100% {
+    opacity: 0.4;
+    transform: translateY(-50%) scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(-50%) scale(1.15);
+  }
+}
+
+@keyframes lineExpand {
+  0% {
+    width: 0;
+    opacity: 0;
+  }
+  100% {
+    width: 120px;
+    opacity: 1;
+  }
+}
+
+@keyframes shine {
+  0% {
+    transform: translateX(-120%) skewX(-15deg);
+  }
+  100% {
+    transform: translateX(120%) skewX(-15deg);
+  }
+}
+
+@keyframes particleFloat {
+  0% {
+    transform: translateY(100vh) translateX(0) scale(0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.6;
+  }
+  85% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-100px) translateX(var(--drift, 50px)) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes gridMove {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(60px, 60px);
+  }
+}
+
+@keyframes orbFloat {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.3;
+  }
+  33% {
+    transform: translate(30px, -40px) scale(1.1);
+    opacity: 0.5;
+  }
+  66% {
+    transform: translate(-25px, -60px) scale(0.95);
+    opacity: 0.4;
+  }
+}
+
+@keyframes cursorPulse {
+  0%, 100% {
+    opacity: 0.25;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.3);
+  }
+}
+
+/* ================================
+   RESPONSIVE
+================================ */
+@media (max-width: 1024px) {
+  .intro-logo {
+    font-size: 3.5rem;
+  }
+
+  .intro-divine-logo {
+    width: 75px;
+    height: 75px;
+  }
+
+  .intro-content::before,
+  .intro-content::after {
+    font-size: 1.5rem;
+    left: -30px;
+    right: -30px;
+  }
+}
+
+@media (max-width: 768px) {
+  .intro-logo {
+    font-size: 2.8rem;
+    letter-spacing: 0.25em;
+  }
+
+  .intro-divine-logo {
+    width: 65px;
+    height: 65px;
+    margin-bottom: 1.5rem;
+  }
+
+  .intro-tagline {
+    font-size: 1rem;
+    padding: 0 1.5rem;
+    margin-top: 2.5rem;
+  }
+
+  .intro-glow {
+    width: 350px;
+    height: 350px;
+  }
+
+  .intro-content::before,
+  .intro-content::after {
+    display: none;
+  }
+
+  .orb {
+    opacity: 0.6;
+  }
+}
+
+@media (max-width: 480px) {
+  .intro-logo {
+    font-size: 2.2rem;
+  }
+
+  .intro-tagline {
+    font-size: 0.9rem;
+  }
+}

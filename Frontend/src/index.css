@@ -1,0 +1,41 @@
+
+
+.catalog {
+  padding: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.bg-animation {
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle,
+    rgba(212, 175, 55, 0.08),
+    transparent 60%
+  );
+  animation: move 20s infinite alternate ease-in-out;
+}
+
+/* GLOBAL RESET + BACKGROUND FIX */
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: #f6e6c9; 
+  overflow-x: hidden;
+}
+
+
+@keyframes move {
+  from {
+    transform: translate(-10%, -10%);
+  }
+  to {
+    transform: translate(10%, 10%);
+  }
+}

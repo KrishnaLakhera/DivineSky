@@ -1,0 +1,282 @@
+/* ================================
+   ADMIN PAGE
+================================ */
+.admin-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fdfbf7 0%, #fef5e7 50%, #f5daa8 100%);
+}
+
+/* ================================
+   ADMIN HEADER
+================================ */
+.admin-header {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d3748 100%);
+  color: white;
+  padding: 30px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.admin-header-content h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+.admin-header-content p {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+}
+
+.admin-logout-btn {
+  padding: 12px 24px;
+  background: rgba(217, 119, 6, 0.2);
+  border: 2px solid rgba(217, 119, 6, 0.5);
+  border-radius: 10px;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.admin-logout-btn:hover {
+  background: rgba(217, 119, 6, 0.3);
+  border-color: #d97706;
+  transform: translateY(-2px);
+}
+
+/* ================================
+   ADMIN MAIN
+================================ */
+.admin-main {
+  padding: 40px 20px;
+}
+
+/* ================================
+   DASHBOARD CONTAINER
+================================ */
+.dashboard-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.dashboard-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 60px;
+  background: linear-gradient(135deg, #1a1a1a 0%, #d97706 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ================================
+   DASHBOARD CARDS
+================================ */
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 40px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.dashboard-card {
+  background: white;
+  border-radius: 24px;
+  padding: 50px 40px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  border: 3px solid rgba(217, 119, 6, 0.1);
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.dashboard-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, #f59e0b, #d97706);
+  transform: scaleX(0);
+  transition: transform 0.4s ease;
+}
+
+.dashboard-card:hover::before {
+  transform: scaleX(1);
+}
+
+.dashboard-card:hover {
+  transform: translateY(-12px);
+  box-shadow: 0 20px 60px rgba(217, 119, 6, 0.25);
+  border-color: rgba(217, 119, 6, 0.3);
+}
+
+.card-icon {
+  font-size: 5rem;
+  margin-bottom: 24px;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.card-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 16px 0;
+}
+
+.card-description {
+  font-size: 1.1rem;
+  color: #6b7280;
+  line-height: 1.6;
+  margin: 0 0 24px 0;
+}
+
+.card-arrow {
+  font-size: 2rem;
+  color: #d97706;
+  font-weight: 700;
+  transition: transform 0.3s ease;
+}
+
+.dashboard-card:hover .card-arrow {
+  transform: translateX(10px);
+}
+
+/* ================================
+   VIEW CONTAINER
+================================ */
+.view-container {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.back-to-dashboard-btn {
+  padding: 12px 24px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 2px solid rgba(217, 119, 6, 0.2);
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.back-to-dashboard-btn:hover {
+  background: white;
+  border-color: rgba(217, 119, 6, 0.4);
+  transform: translateX(-4px);
+}
+
+/* ================================
+   RESPONSIVE - TABLET
+================================ */
+@media (max-width: 1024px) {
+  .admin-header {
+    padding: 24px 30px;
+  }
+
+  .admin-header-content h1 {
+    font-size: 1.8rem;
+  }
+
+  .dashboard-title {
+    font-size: 2rem;
+  }
+
+  .dashboard-cards {
+    grid-template-columns: 1fr;
+    max-width: 500px;
+  }
+}
+
+/* ================================
+   RESPONSIVE - MOBILE
+================================ */
+@media (max-width: 768px) {
+  .admin-header {
+    flex-direction: column;
+    gap: 20px;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .admin-header-content h1 {
+    font-size: 1.6rem;
+  }
+
+  .admin-main {
+    padding: 30px 16px;
+  }
+
+  .dashboard-title {
+    font-size: 1.8rem;
+    margin-bottom: 40px;
+  }
+
+  .dashboard-card {
+    padding: 40px 30px;
+  }
+
+  .card-icon {
+    font-size: 4rem;
+  }
+
+  .card-title {
+    font-size: 1.5rem;
+  }
+
+  .card-description {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-header-content h1 {
+    font-size: 1.4rem;
+  }
+
+  .admin-logout-btn {
+    padding: 10px 20px;
+    font-size: 0.95rem;
+  }
+
+  .dashboard-title {
+    font-size: 1.6rem;
+  }
+
+  .dashboard-card {
+    padding: 30px 20px;
+  }
+
+  .card-icon {
+    font-size: 3.5rem;
+  }
+
+  .card-title {
+    font-size: 1.3rem;
+  }
+}

@@ -1,0 +1,201 @@
+/* ================================
+   CATEGORY CARD (SLIDE)
+================================ */
+.category-slide {
+  position: relative;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 40px 32px;
+  cursor: pointer;
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  border: 2px solid rgba(217, 119, 6, 0.15);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(217, 119, 6, 0.08);
+}
+
+.category-slide::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(251, 191, 36, 0.08),
+    rgba(217, 119, 6, 0.08)
+  );
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  z-index: 0;
+}
+
+.category-slide:hover::before {
+  opacity: 1;
+}
+
+.category-slide:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: rgba(217, 119, 6, 0.35);
+  box-shadow: 0 12px 40px rgba(217, 119, 6, 0.2);
+  background: rgba(255, 255, 255, 0.95);
+}
+
+/* Staggered animation for cards in grid */
+.category-slide:nth-child(1) {
+  animation: slideInUp 0.6s ease-out 0.1s both;
+}
+.category-slide:nth-child(2) {
+  animation: slideInUp 0.6s ease-out 0.2s both;
+}
+.category-slide:nth-child(3) {
+  animation: slideInUp 0.6s ease-out 0.3s both;
+}
+.category-slide:nth-child(4) {
+  animation: slideInUp 0.6s ease-out 0.4s both;
+}
+.category-slide:nth-child(5) {
+  animation: slideInUp 0.6s ease-out 0.5s both;
+}
+.category-slide:nth-child(6) {
+  animation: slideInUp 0.6s ease-out 0.6s both;
+}
+
+/* ================================
+   CATEGORY ICON/IMAGE
+================================ */
+.category-slide-icon {
+  width: 150px;
+  height: 150px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  z-index: 1;
+}
+
+.category-slide-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 12px;
+  filter: grayscale(0.2) brightness(0.95);
+  transition: all 0.5s ease;
+}
+
+
+.category-slide:hover .category-slide-icon img {
+  filter: grayscale(0) brightness(1);
+}
+
+/* ================================
+   CATEGORY TITLE
+================================ */
+.category-slide h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 14px;
+  transition: color 0.3s ease;
+  position: relative;
+  z-index: 1;
+  letter-spacing: -0.01em;
+}
+
+.category-slide:hover h3 {
+  color: #d97706;
+}
+
+/* ================================
+   CATEGORY CTA
+================================ */
+.category-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #6b7280;
+  transition: all 0.4s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.category-slide:hover .category-cta {
+  color: #d97706;
+  transform: translateX(4px);
+}
+
+.category-cta::after {
+  content: "→";
+  transition: transform 0.4s ease;
+}
+
+.category-slide:hover .category-cta::after {
+  transform: translateX(4px);
+}
+
+/* ================================
+   RESPONSIVE - TABLET
+================================ */
+@media (max-width: 1024px) {
+  .category-slide {
+    padding: 36px 28px;
+  }
+
+  .category-slide-icon {
+    width: 130px;
+    height: 130px;
+  }
+}
+
+/* ================================
+   RESPONSIVE - MOBILE
+================================ */
+@media (max-width: 768px) {
+  .category-slide {
+    padding: 32px 24px;
+  }
+
+  .category-slide-icon {
+    width: 120px;
+    height: 120px;
+  }
+
+  .category-slide h3 {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .category-slide {
+    padding: 28px 20px;
+  }
+
+  .category-slide-icon {
+    width: 100px;
+    height: 100px;
+  }
+
+  .category-slide h3 {
+    font-size: 1.2rem;
+  }
+}
+
+/* ================================
+   ANIMATIONS
+================================ */
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
