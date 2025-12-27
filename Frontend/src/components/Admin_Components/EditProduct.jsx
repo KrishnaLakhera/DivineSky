@@ -16,9 +16,9 @@ export default function EditProduct() {
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(category);
-  const [subCategory, setSubCategory] = useState(""); // ✅ NEW for subcategories
+  const [subCategory, setSubCategory] = useState("");
   
-  // ✅ NEW: Categories with subcategories
+  // Categories with subcategories
   const categoriesWithSubs = {
     altars: {
       label: "Altars & Temple Setups",
@@ -27,7 +27,7 @@ export default function EditProduct() {
         { value: "small", label: "Small Size" },
         { value: "large", label: "Large Size" },
         { value: "tovp", label: "TOVP Style Altar" },
-        { value: "sp-altar", label: "Prabhupada Altar", image:"" },
+        { value: "sp-altar", label: "Prabhupada Altar" },
       ]
     },
     deities: {
@@ -101,8 +101,8 @@ export default function EditProduct() {
         setName(p.name);
         setPrice(p.price);
         setDescription(p.description || "");
-        setSelectedCategory(category);
-        setSubCategory(p.subCategory || ""); // ✅ Load subcategory
+        setSelectedCategory(p.category || category); // ✅ Use product's actual category
+        setSubCategory(p.subCategory || "");
       } else {
         setMessage({ type: "error", text: "Product not found" });
       }
@@ -286,8 +286,9 @@ export default function EditProduct() {
   const handleSave = async () => {
     const isChangingName = name !== product.name;
     const isChangingPrice = parseFloat(price) !== product.price;
+    const isChangingDescription = description !== (product.description || "");
     const isChangingCategory = selectedCategory !== category;
-    const isChangingSubCategory = subCategory !== (product.subCategory || ""); // ✅ NEW
+    const isChangingSubCategory = subCategory !== (product.subCategory || "");
     
     if (isChangingName && !name.trim()) {
       setMessage({ type: "error", text: "Name cannot be empty" });
@@ -299,7 +300,7 @@ export default function EditProduct() {
       return;
     }
 
-    // ✅ NEW: Validate subcategory if category has subcategories
+    // Validate subcategory if category has subcategories
     const currentCategoryData = categoriesWithSubs[selectedCategory];
     const hasSubCategories = currentCategoryData?.subCategories?.length > 0;
     if (hasSubCategories && !subCategory) {
@@ -307,7 +308,7 @@ export default function EditProduct() {
       return;
     }
 
-    // ✅ Confirm category change
+    // Confirm category change
     if (isChangingCategory) {
       const confirmMsg = `This will move the product from "${categoriesWithSubs[category]?.label}" to "${categoriesWithSubs[selectedCategory]?.label}". Continue?`;
       if (!confirm(confirmMsg)) {
@@ -322,18 +323,15 @@ export default function EditProduct() {
       const token = localStorage.getItem("admin_token");
       const formData = new FormData();
       
-      if (isChangingName) formData.append("name", name.trim());
-      if (isChangingPrice) formData.append("price", price);
-      if (description !== product.description) {
-        formData.append("description", description.trim());
-      }
+      // ✅ ALWAYS send these fields to ensure they're updated properly
+      formData.append("name", name.trim());
+      formData.append("price", price);
+      formData.append("description", description.trim());
+      formData.append("subCategory", subCategory);
       
-      // ✅ NEW: Add category and subcategory changes
+      // Category change
       if (isChangingCategory) {
         formData.append("newCategory", selectedCategory);
-      }
-      if (isChangingSubCategory) {
-        formData.append("subCategory", subCategory);
       }
 
       if (newImages.length > 0) {
@@ -370,15 +368,23 @@ export default function EditProduct() {
             ? "✅ Product updated and moved to new category!" 
             : "✅ Product updated successfully!" 
         });
+        
+        // Clear form
         setNewImages([]);
         setNewModel(null);
         setNewVideo(null);
         setImagePreviews([]);
         setReplaceImages(false);
         
+        // ✅ IMPORTANT: Navigate to the NEW category if changed
         setTimeout(() => {
-          navigate("/admin/products");
-        }, 2000);
+          if (isChangingCategory && data.newCategory) {
+            // Redirect to the new category in products list
+            navigate(`/admin/products?category=${data.newCategory}`);
+          } else {
+            navigate("/admin/products");
+          }
+        }, 1500);
       } else {
         setMessage({ type: "error", text: data.message || "Update failed" });
       }
@@ -410,7 +416,7 @@ export default function EditProduct() {
     );
   }
 
-  // ✅ Get current subcategories based on selected category
+  // Get current subcategories based on selected category
   const currentSubCategories = categoriesWithSubs[selectedCategory]?.subCategories || [];
   const hasSubCategories = currentSubCategories.length > 0;
 
@@ -439,13 +445,13 @@ export default function EditProduct() {
             <label>Current Category</label>
             <div className="current-category">
               <span className="category-badge">
-                {categoriesWithSubs[category]?.label || category}
+                {categoriesWithSubs[product.category || category]?.label || product.category || category}
               </span>
             </div>
             {product.subCategory && (
               <div className="current-subcategory">
                 <small>
-                  Subcategory: {categoriesWithSubs[category]?.subCategories?.find(s => s.value === product.subCategory)?.label || product.subCategory}
+                  Subcategory: {categoriesWithSubs[product.category || category]?.subCategories?.find(s => s.value === product.subCategory)?.label || product.subCategory}
                 </small>
               </div>
             )}
@@ -538,7 +544,7 @@ export default function EditProduct() {
             )}
           </div>
 
-          {/* ✅ NEW: Subcategory Selector */}
+          {/* Subcategory Selector */}
           {hasSubCategories && (
             <div className="form-group subcategory-group">
               <label>
@@ -559,7 +565,7 @@ export default function EditProduct() {
               </select>
               {product.subCategory && subCategory !== product.subCategory && (
                 <small className="form-hint">
-                  Current: {categoriesWithSubs[category]?.subCategories?.find(s => s.value === product.subCategory)?.label || product.subCategory}
+                  Current: {categoriesWithSubs[product.category || category]?.subCategories?.find(s => s.value === product.subCategory)?.label || product.subCategory}
                 </small>
               )}
             </div>
@@ -567,18 +573,18 @@ export default function EditProduct() {
 
           {/* Basic Info */}
           <div className="form-group">
-            <label>Product Name</label>
+            <label>Product Name *</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter product name"
+              required
             />
-            <small className="form-hint">Leave unchanged or modify</small>
           </div>
 
           <div className="form-group">
-            <label>Price (₹)</label>
+            <label>Price (₹) *</label>
             <input
               type="number"
               value={price}
@@ -586,8 +592,8 @@ export default function EditProduct() {
               placeholder="0.00"
               min="0"
               step="0.01"
+              required
             />
-            <small className="form-hint">Leave unchanged or modify</small>
           </div>
 
           <div className="form-group">
@@ -598,7 +604,6 @@ export default function EditProduct() {
               placeholder="Enter product description"
               rows={4}
             />
-            <small className="form-hint">Leave unchanged or modify</small>
           </div>
 
           {/* Upload New Images */}

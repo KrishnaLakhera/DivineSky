@@ -122,7 +122,7 @@
   letter-spacing: 0.5px;
 }
 
-/* ✅ NEW: Current Category Display */
+/* Current Category & Subcategory Display */
 .current-category {
   display: flex;
   align-items: center;
@@ -141,6 +141,20 @@
   box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
 }
 
+.current-subcategory {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: rgba(217, 119, 6, 0.1);
+  border-radius: 6px;
+}
+
+.current-subcategory small {
+  color: #d97706;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+/* Images Grid */
 .current-images-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -201,6 +215,7 @@
   cursor: not-allowed;
 }
 
+/* File Status Display */
 .current-file {
   display: flex;
   align-items: center;
@@ -284,7 +299,16 @@
   margin-bottom: 8px;
 }
 
-/* ✅ UPDATED: Added .category-select */
+/* Label Hint */
+.label-hint {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #d97706;
+  font-style: italic;
+  margin-left: 8px;
+}
+
+/* Form Inputs */
 .form-group input[type="text"],
 .form-group input[type="number"],
 .form-group textarea,
@@ -318,6 +342,43 @@
   min-height: 100px;
 }
 
+/* Subcategory Form Group - Special Styling */
+.subcategory-group {
+  animation: slideInSubcat 0.3s ease;
+  background: linear-gradient(135deg, rgba(217, 119, 6, 0.05), rgba(245, 158, 11, 0.05));
+  padding: 16px;
+  border-radius: 12px;
+  border: 2px solid rgba(217, 119, 6, 0.2);
+}
+
+@keyframes slideInSubcat {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.subcategory-select {
+  border: 2px solid rgba(217, 119, 6, 0.3) !important;
+  background: white;
+  font-weight: 500;
+}
+
+.subcategory-select:focus {
+  border-color: #d97706 !important;
+  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15) !important;
+}
+
+.subcategory-select option[value=""] {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+/* Form Hints */
 .form-hint {
   display: block;
   margin-top: 6px;
@@ -326,7 +387,6 @@
   font-style: italic;
 }
 
-/* ✅ NEW: Warning hint for category change */
 .form-hint.warning {
   color: #d97706;
   font-weight: 600;
@@ -337,6 +397,7 @@
   border-left: 3px solid #d97706;
 }
 
+/* Image Mode Toggle */
 .image-mode-toggle {
   display: flex;
   gap: 16px;
@@ -367,6 +428,7 @@
   color: #d97706;
 }
 
+/* File Input */
 .file-input {
   width: 100%;
   padding: 12px;
@@ -381,6 +443,7 @@
   background: rgba(217, 119, 6, 0.05);
 }
 
+/* Image Previews */
 .new-images-preview {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -425,16 +488,18 @@
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.2);
 }
 
 .save-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(217, 119, 6, 0.3);
+  box-shadow: 0 8px 24px rgba(217, 119, 6, 0.4);
 }
 
 .save-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
 }
 
 /* ================================
@@ -523,6 +588,16 @@
     font-size: 0.9rem;
     padding: 8px 16px;
   }
+  
+  .subcategory-group {
+    padding: 12px;
+  }
+  
+  .label-hint {
+    display: block;
+    margin-left: 0;
+    margin-top: 4px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -544,82 +619,9 @@
     flex-direction: column;
     gap: 8px;
   }
-}
-
-/* ================================
-   ADD THESE STYLES TO YOUR EXISTING EditProduct.css
-   Add them at the end of the file, before the responsive section
-================================ */
-
-/* Current Subcategory Display */
-.current-subcategory {
-  margin-top: 8px;
-  padding: 8px 12px;
-  background: rgba(217, 119, 6, 0.1);
-  border-radius: 6px;
-}
-
-.current-subcategory small {
-  color: #d97706;
-  font-weight: 600;
-  font-size: 0.9rem;
-}
-
-/* Subcategory Form Group */
-.subcategory-group {
-  animation: slideInSubcat 0.3s ease;
-  background: linear-gradient(135deg, rgba(217, 119, 6, 0.05), rgba(245, 158, 11, 0.05));
-  padding: 16px;
-  border-radius: 12px;
-  border: 2px solid rgba(217, 119, 6, 0.2);
-}
-
-@keyframes slideInSubcat {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Label Hint */
-.label-hint {
-  font-size: 0.85rem;
-  font-weight: 400;
-  color: #d97706;
-  font-style: italic;
-  margin-left: 8px;
-}
-
-/* Subcategory Select */
-.subcategory-select {
-  border: 2px solid rgba(217, 119, 6, 0.3) !important;
-  background: white;
-  font-weight: 500;
-}
-
-.subcategory-select:focus {
-  border-color: #d97706 !important;
-  box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15) !important;
-}
-
-.subcategory-select option[value=""] {
-  color: #9ca3af;
-  font-style: italic;
-}
-
-/* Mobile responsive for subcategory */
-@media (max-width: 768px) {
-  .subcategory-group {
-    padding: 12px;
-  }
   
-  .label-hint {
-    display: block;
-    margin-left: 0;
-    margin-top: 4px;
+  .save-btn {
+    font-size: 1rem;
+    padding: 14px 28px;
   }
 }

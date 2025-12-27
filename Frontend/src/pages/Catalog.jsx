@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import CategoryBar from "../components/Catalog/CategoryBar";
-import SubCategorySection from "../components/Catalog/SubCategorySection";
 import ProductGrid from "../components/Catalog/ProductGrid";
 import LoadingState from "../components/Catalog/LoadingState";
 import ErrorState from "../components/Catalog/ErrorState";
@@ -104,7 +103,6 @@ export default function Catalog({ search }) {
   useEffect(() => {
     const categoryFromUrl = searchParams.get("category");
     if (categoryFromUrl) {
-      // Check if the category exists in your categories array
       const categoryExists = categories.some(cat => cat.value === categoryFromUrl);
       if (categoryExists) {
         setSelectedCategory(categoryFromUrl);
@@ -112,12 +110,8 @@ export default function Catalog({ search }) {
     }
   }, [searchParams]);
 
-  // Fetch products - FIXED for "all" category to get ALL products
-  useEffect(() => {
-    fetchProducts();
-  }, [selectedCategory]);
-
-  const fetchProducts = async () => {
+  // OPTIMIZED: Fetch products with parallel requests
+  const fetchProducts = useCallback(async (category) => {
     try {
       setLoading(true);
       setError(null);
@@ -125,35 +119,45 @@ export default function Catalog({ search }) {
 
       let productsArray = [];
 
-      if (selectedCategory === "all") {
-        // Fetch ALL products from all categories
+      if (category === "all") {
+        // Fetch ALL products from all categories IN PARALLEL
         const categoryValues = categories
           .filter(cat => cat.value !== "all")
           .map(cat => cat.value);
         
-        const fetchPromises = categoryValues.map(catValue =>
-          fetch(`https://divinesky.onrender.com/products/${catValue}`)
-            .then(res => res.json())
-            .then(data => {
-              if (data.success) {
-                return Array.isArray(data.products) 
-                  ? data.products 
-                  : Object.values(data.products || {});
-              }
-              return [];
-            })
-            .catch(err => {
-              console.error(`Error fetching ${catValue}:`, err);
-              return [];
-            })
+        // Use Promise.allSettled for better error handling
+        const results = await Promise.allSettled(
+          categoryValues.map(catValue =>
+            fetch(`https://divinesky.onrender.com/products/${catValue}`)
+              .then(res => {
+                if (!res.ok) throw new Error(`Failed to fetch ${catValue}`);
+                return res.json();
+              })
+          )
         );
 
-        const results = await Promise.all(fetchPromises);
-        productsArray = results.flat();
+        // Extract successful results
+        productsArray = results
+          .filter(result => result.status === 'fulfilled')
+          .flatMap(result => {
+            const data = result.value;
+            if (data.success) {
+              return Array.isArray(data.products) 
+                ? data.products 
+                : Object.values(data.products || {});
+            }
+            return [];
+          });
+
+        // Log any failures (optional)
+        const failures = results.filter(r => r.status === 'rejected');
+        if (failures.length > 0) {
+          console.warn(`${failures.length} categories failed to load`);
+        }
+
       } else {
         // Fetch specific category
-        const url = `https://divinesky.onrender.com/products/${selectedCategory}`;
-        const response = await fetch(url);
+        const response = await fetch(`https://divinesky.onrender.com/products/${category}`);
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -169,6 +173,7 @@ export default function Catalog({ search }) {
       }
       
       setAllProducts(productsArray);
+      // Initially load only itemsPerPage products
       setDisplayedProducts(productsArray.slice(0, itemsPerPage));
       setHasMore(productsArray.length > itemsPerPage);
       setLoading(false);
@@ -180,10 +185,26 @@ export default function Catalog({ search }) {
       setDisplayedProducts([]);
       setHasMore(false);
     }
-  };
+  }, [itemsPerPage]);
 
-  // Load more products
-  const loadMoreProducts = () => {
+  // Fetch products when category changes
+  useEffect(() => {
+    fetchProducts(selectedCategory);
+  }, [selectedCategory, fetchProducts]);
+
+  // MEMOIZED: Get filtered products based on search and subcategory
+  const filteredProducts = useMemo(() => {
+    return allProducts.filter((p) => {
+      const matchesSearch = !search || 
+        p.name?.toLowerCase().includes(search.toLowerCase()) ||
+        p.category?.toLowerCase().includes(search.toLowerCase());
+      const matchesSubCategory = !selectedSubCategory || p.subCategory === selectedSubCategory;
+      return matchesSearch && matchesSubCategory;
+    });
+  }, [allProducts, search, selectedSubCategory]);
+
+  // Load more products for infinite scroll
+  const loadMoreProducts = useCallback(() => {
     if (isLoadingMore || !hasMore) return;
 
     setIsLoadingMore(true);
@@ -194,36 +215,26 @@ export default function Catalog({ search }) {
       const startIndex = page * itemsPerPage;
       const endIndex = startIndex + itemsPerPage;
       
-      const filteredProducts = getFilteredProducts();
-      const newProducts = filteredProducts.slice(startIndex, endIndex);
+      const filtered = filteredProducts;
+      const newProducts = filtered.slice(startIndex, endIndex);
       
       setDisplayedProducts(prev => [...prev, ...newProducts]);
       setPage(nextPage);
-      setHasMore(endIndex < filteredProducts.length);
+      setHasMore(endIndex < filtered.length);
       setIsLoadingMore(false);
     }, 300);
-  };
+  }, [page, itemsPerPage, filteredProducts, hasMore, isLoadingMore]);
 
   // Custom hook for infinite scroll
   const loadMoreRef = useInfiniteScroll(loadMoreProducts, hasMore && !isLoadingMore);
 
-  // Get filtered products based on search and subcategory
-  const getFilteredProducts = () => {
-    return allProducts.filter((p) => {
-      const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase()) ||
-                           p.category.toLowerCase().includes(search.toLowerCase());
-      const matchesSubCategory = !selectedSubCategory || p.subCategory === selectedSubCategory;
-      return matchesSearch && matchesSubCategory;
-    });
-  };
-
   // Update displayed products when filters change
   useEffect(() => {
-    const filtered = getFilteredProducts();
+    const filtered = filteredProducts;
     setDisplayedProducts(filtered.slice(0, itemsPerPage));
     setPage(1);
     setHasMore(filtered.length > itemsPerPage);
-  }, [search, selectedSubCategory, allProducts, itemsPerPage]);
+  }, [search, selectedSubCategory, filteredProducts, itemsPerPage]);
 
   // Handle category change
   const handleCategoryChange = (categoryValue) => {
@@ -242,9 +253,10 @@ export default function Catalog({ search }) {
   const currentCategory = categories.find(c => c.value === selectedCategory);
   const hasSubCategories = currentCategory?.subCategories?.length > 0;
 
-  const filteredProducts = getFilteredProducts();
-
-  // UPDATED: Show subcategory sections for specific categories (not "all")
+  // Show subcategory sections only when:
+  // 1. Not viewing "all" category
+  // 2. Category has subcategories
+  // 3. No specific subcategory is selected
   const showSubCategorySections = selectedCategory !== "all" && hasSubCategories && !selectedSubCategory;
 
   return (
@@ -261,10 +273,10 @@ export default function Catalog({ search }) {
 
       {/* Error State */}
       {error && !loading && (
-        <ErrorState error={error} onRetry={fetchProducts} />
+        <ErrorState error={error} onRetry={() => fetchProducts(selectedCategory)} />
       )}
 
-      {/* Show Subcategory Sections for specific categories */}
+      {/* Subcategory Sections - Netflix Style (showing only 3 products) */}
       {!loading && showSubCategorySections && (
         <div className="subcategory-sections-wrapper">
           <div className="category-intro">
@@ -290,7 +302,8 @@ export default function Catalog({ search }) {
                     View All ({subCategoryProducts.length})
                   </button>
                 </div>
-                <ProductGrid products={subCategoryProducts.slice(0, 8)} />
+                {/* Show only 3 products */}
+                <ProductGrid products={subCategoryProducts.slice(0, 3)} />
               </div>
             );
           })}
@@ -328,7 +341,7 @@ export default function Catalog({ search }) {
         />
       )}
 
-      {/* Products Grid - Show when "all" category OR subcategory selected OR no subcategories */}
+      {/* Products Grid - Show when "all" category OR subcategory selected */}
       {!loading && !error && filteredProducts.length > 0 && !showSubCategorySections && (
         <>
           <div className="catalog-stats">
@@ -340,7 +353,7 @@ export default function Catalog({ search }) {
 
           <ProductGrid products={displayedProducts} />
 
-          {/* Load More Trigger */}
+          {/* Load More Trigger for Infinite Scroll */}
           {hasMore && (
             <div ref={loadMoreRef} className="load-more-trigger">
               {isLoadingMore && (
@@ -352,6 +365,7 @@ export default function Catalog({ search }) {
             </div>
           )}
 
+          {/* End Message */}
           {!hasMore && displayedProducts.length > itemsPerPage && (
             <div className="end-message">
               <p>You've reached the end! 🎉</p>
