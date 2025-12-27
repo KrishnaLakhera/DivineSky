@@ -28,7 +28,7 @@ export const CATEGORIES = [
     value: "Prabhupada_altars",
     label: "Prabhupada Altars",
     subCategories: [
-      { value: "SP_altar", label: "Prabhupada Altar" },
+      { value: "SP_altars", label: "Prabhupada Altar" },
     ]
   },
   {
