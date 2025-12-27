@@ -12,7 +12,7 @@ const router = express.Router();
 
 /**
  * 🔐 PUT /admin/products/:category/:id
- * Update existing product - FIXED for category changes
+ * Update existing product - FIXED for category changes + Ready Stock support
  */
 router.put(
   "/products/:category/:id",
@@ -34,13 +34,17 @@ router.put(
         removeVideo,
         replaceImages,
         newCategory,
-        subCategory
+        subCategory,
+        // ✨ NEW: Ready Stock fields
+        inReadyStock,
+        readyStockQuantity
       } = req.body;
       
       console.log("=== UPDATE PRODUCT REQUEST ===");
       console.log("Product ID:", id);
       console.log("Current Category:", category);
       console.log("New Category:", newCategory);
+      console.log("Ready Stock:", inReadyStock, "Quantity:", readyStockQuantity);
       console.log("Request body:", req.body);
 
       // Check if changing category
@@ -259,13 +263,6 @@ router.put(
         console.log(`✅ Product removed from ${category}`);
 
         console.log("=== CATEGORY MOVE COMPLETE ===");
-        
-        res.json({
-          success: true,
-          message: `Product moved to ${newCategory} and updated successfully`,
-          product: existingProduct,
-          newCategory: newCategory,
-        });
       } else {
         // ========================================
         // SAVE CHANGES (Same Category)
@@ -279,13 +276,79 @@ router.put(
         await putJsonToR2(jsonKey, data);
 
         console.log("✅ Product updated successfully");
-
-        res.json({
-          success: true,
-          message: "Product updated successfully",
-          product: existingProduct,
-        });
       }
+
+      // ========================================
+      // 🆕 HANDLE READY STOCK
+      // ========================================
+      
+      const readyStockKey = "products/ready-stock.json";
+      let readyStockData = await getJsonFromR2(readyStockKey);
+      
+      if (!readyStockData) {
+        readyStockData = {
+          products: {},
+          last_updated: new Date().toISOString(),
+        };
+      }
+
+      const isInReadyStock = readyStockData.products[id] !== undefined;
+      const shouldBeInReadyStock = inReadyStock === "true" || inReadyStock === true;
+
+      if (shouldBeInReadyStock) {
+        // Add or update in ready stock
+        const quantity = parseInt(readyStockQuantity) || 0;
+        
+        if (quantity <= 0) {
+          return res.status(400).json({
+            success: false,
+            message: "Ready stock quantity must be greater than 0",
+          });
+        }
+
+        readyStockData.products[id] = {
+          ...existingProduct,
+          quantity: quantity,
+          addedToStock: isInReadyStock 
+            ? readyStockData.products[id].addedToStock 
+            : new Date().toISOString(),
+          lastUpdated: new Date().toISOString(),
+        };
+
+        readyStockData.last_updated = new Date().toISOString();
+        await putJsonToR2(readyStockKey, readyStockData);
+        
+        console.log(`✅ Product ${isInReadyStock ? 'updated in' : 'added to'} ready stock with quantity: ${quantity}`);
+      } else if (isInReadyStock && !shouldBeInReadyStock) {
+        // Remove from ready stock
+        delete readyStockData.products[id];
+        readyStockData.last_updated = new Date().toISOString();
+        await putJsonToR2(readyStockKey, readyStockData);
+        
+        console.log("✅ Product removed from ready stock");
+      }
+
+      // ========================================
+      // SEND RESPONSE
+      // ========================================
+      
+      const responseMessage = isChangingCategory 
+        ? `Product moved to ${newCategory} and updated successfully`
+        : "Product updated successfully";
+
+      res.json({
+        success: true,
+        message: responseMessage,
+        product: existingProduct,
+        newCategory: isChangingCategory ? newCategory : undefined,
+        readyStock: shouldBeInReadyStock ? {
+          inStock: true,
+          quantity: parseInt(readyStockQuantity) || 0
+        } : {
+          inStock: false
+        }
+      });
+      
     } catch (err) {
       console.error("=== UPDATE ERROR ===");
       console.error(err);
@@ -375,7 +438,7 @@ router.patch(
 
 /**
  * 🔐 GET /admin/products/:category/:id
- * Get single product for editing
+ * Get single product for editing (with ready stock info)
  */
 router.get("/products/:category/:id", auth, async (req, res) => {
   try {
@@ -403,9 +466,28 @@ router.get("/products/:category/:id", auth, async (req, res) => {
       product.category = category;
     }
 
+    // 🆕 Check if in ready stock
+    const readyStockKey = "products/ready-stock.json";
+    const readyStockData = await getJsonFromR2(readyStockKey);
+    
+    let readyStockInfo = {
+      inReadyStock: false,
+      quantity: 0
+    };
+
+    if (readyStockData && readyStockData.products[id]) {
+      readyStockInfo = {
+        inReadyStock: true,
+        quantity: readyStockData.products[id].quantity,
+        addedToStock: readyStockData.products[id].addedToStock,
+        lastUpdated: readyStockData.products[id].lastUpdated
+      };
+    }
+
     res.json({
       success: true,
       product: product,
+      readyStock: readyStockInfo
     });
   } catch (err) {
     console.error("Fetch error:", err);
@@ -418,7 +500,7 @@ router.get("/products/:category/:id", auth, async (req, res) => {
 
 /**
  * 🔐 DELETE /admin/products/:category/:id
- * Delete a product
+ * Delete a product (also removes from ready stock)
  */
 router.delete("/products/:category/:id", auth, async (req, res) => {
   try {
@@ -464,6 +546,17 @@ router.delete("/products/:category/:id", auth, async (req, res) => {
     delete data.products[id];
     data.last_updated = new Date().toISOString();
     await putJsonToR2(jsonKey, data);
+
+    // 🆕 Remove from ready stock if exists
+    const readyStockKey = "products/ready-stock.json";
+    const readyStockData = await getJsonFromR2(readyStockKey);
+    
+    if (readyStockData && readyStockData.products[id]) {
+      delete readyStockData.products[id];
+      readyStockData.last_updated = new Date().toISOString();
+      await putJsonToR2(readyStockKey, readyStockData);
+      console.log("✅ Product also removed from ready stock");
+    }
 
     res.json({
       success: true,

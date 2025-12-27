@@ -91,6 +91,8 @@ export default function App() {
           </AdminRoute>
         }
       />
+
+     <Route path="/ready-stock" element={<ReadyStock />} />
     </Routes>
   );
 }
