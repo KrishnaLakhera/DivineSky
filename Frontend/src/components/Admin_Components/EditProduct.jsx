@@ -19,6 +19,10 @@ export default function EditProduct() {
   const [selectedCategory, setSelectedCategory] = useState(category);
   const [subCategory, setSubCategory] = useState("");
   
+  // Ready Stock states
+  const [inReadyStock, setInReadyStock] = useState(false);
+  const [readyStockQuantity, setReadyStockQuantity] = useState("");
+  
   // File states
   const [newImages, setNewImages] = useState([]);
   const [replaceImages, setReplaceImages] = useState(false);
@@ -55,6 +59,12 @@ export default function EditProduct() {
         setDescription(p.description || "");
         setSelectedCategory(p.category || category);
         setSubCategory(p.subCategory || "");
+        
+        // Set Ready Stock info
+        if (data.readyStock) {
+          setInReadyStock(data.readyStock.inReadyStock || false);
+          setReadyStockQuantity(data.readyStock.quantity ? String(data.readyStock.quantity) : "");
+        }
       } else {
         setMessage({ type: "error", text: "Product not found" });
       }
@@ -129,7 +139,7 @@ export default function EditProduct() {
   };
 
   const removeImage = async (imageIndex) => {
-    if (!confirm(`Remove this image?`)) return;
+    if (!window.confirm(`Remove this image?`)) return;
 
     try {
       setSaving(true);
@@ -164,7 +174,7 @@ export default function EditProduct() {
   };
 
   const removeExistingModel = async () => {
-    if (!confirm("Remove 3D model from this product?")) return;
+    if (!window.confirm("Remove 3D model from this product?")) return;
 
     try {
       setSaving(true);
@@ -200,7 +210,7 @@ export default function EditProduct() {
   };
 
   const removeExistingVideo = async () => {
-    if (!confirm("Remove video from this product?")) return;
+    if (!window.confirm("Remove video from this product?")) return;
 
     try {
       setSaving(true);
@@ -236,20 +246,23 @@ export default function EditProduct() {
   };
 
   const handleSave = async () => {
-    const isChangingName = name !== product.name;
-    const isChangingPrice = parseFloat(price) !== product.price;
-    const isChangingDescription = description !== (product.description || "");
-    const isChangingCategory = selectedCategory !== category;
-    const isChangingSubCategory = subCategory !== (product.subCategory || "");
-    
-    if (isChangingName && !name.trim()) {
+    if (!name.trim()) {
       setMessage({ type: "error", text: "Name cannot be empty" });
       return;
     }
 
-    if (isChangingPrice && (!price || parseFloat(price) < 0)) {
+    if (!price || parseFloat(price) < 0) {
       setMessage({ type: "error", text: "Price must be a valid number" });
       return;
+    }
+
+    // Validate ready stock quantity
+    if (inReadyStock) {
+      const qty = parseInt(readyStockQuantity);
+      if (!readyStockQuantity || qty <= 0) {
+        setMessage({ type: "error", text: "Ready stock quantity must be greater than 0" });
+        return;
+      }
     }
 
     // Validate subcategory if category has subcategories
@@ -261,9 +274,10 @@ export default function EditProduct() {
     }
 
     // Confirm category change
+    const isChangingCategory = selectedCategory !== category;
     if (isChangingCategory) {
       const confirmMsg = `This will move the product from "${getCategoryLabel(category)}" to "${getCategoryLabel(selectedCategory)}". Continue?`;
-      if (!confirm(confirmMsg)) {
+      if (!window.confirm(confirmMsg)) {
         return;
       }
     }
@@ -275,11 +289,17 @@ export default function EditProduct() {
       const token = localStorage.getItem("admin_token");
       const formData = new FormData();
       
-      // ALWAYS send these fields to ensure they're updated properly
+      // ALWAYS send these fields
       formData.append("name", name.trim());
       formData.append("price", price);
       formData.append("description", description.trim());
       formData.append("subCategory", subCategory);
+      
+      // Ready Stock fields
+      formData.append("inReadyStock", inReadyStock ? "true" : "false");
+      if (inReadyStock && readyStockQuantity) {
+        formData.append("readyStockQuantity", readyStockQuantity);
+      }
       
       // Category change
       if (isChangingCategory) {
@@ -314,12 +334,17 @@ export default function EditProduct() {
       const data = await response.json();
 
       if (data.success) {
-        setMessage({ 
-          type: "success", 
-          text: isChangingCategory 
-            ? "✅ Product updated and moved to new category!" 
-            : "✅ Product updated successfully!" 
-        });
+        let successMsg = "✅ Product updated successfully!";
+        if (isChangingCategory) {
+          successMsg = "✅ Product updated and moved to new category!";
+        }
+        if (data.readyStock?.inStock) {
+          successMsg += ` (Added to Ready Stock: ${data.readyStock.quantity} units)`;
+        } else if (!inReadyStock) {
+          successMsg += " (Removed from Ready Stock)";
+        }
+        
+        setMessage({ type: "success", text: successMsg });
         
         // Clear form
         setNewImages([]);
@@ -328,14 +353,14 @@ export default function EditProduct() {
         setImagePreviews([]);
         setReplaceImages(false);
         
-        // Navigate to the NEW category if changed
+        // Navigate after delay
         setTimeout(() => {
           if (isChangingCategory && data.newCategory) {
             navigate(`/admin/products?category=${data.newCategory}`);
           } else {
             navigate("/admin/products");
           }
-        }, 1500);
+        }, 2000);
       } else {
         setMessage({ type: "error", text: data.message || "Update failed" });
       }
@@ -367,7 +392,6 @@ export default function EditProduct() {
     );
   }
 
-  // Get current subcategories based on selected category
   const currentSubCategories = CATEGORIES_OBJECT[selectedCategory]?.subCategories || [];
   const hasSubCategories = currentSubCategories.length > 0;
 
@@ -387,11 +411,10 @@ export default function EditProduct() {
       )}
 
       <div className="edit-content">
-        {/* Left Column - Current Product Info */}
+        {/* Left Column */}
         <div className="current-info-section">
           <h3>Current Product Details</h3>
           
-          {/* Current Category Display */}
           <div className="info-block">
             <label>Current Category</label>
             <div className="current-category">
@@ -408,7 +431,6 @@ export default function EditProduct() {
             )}
           </div>
           
-          {/* Current Images */}
           <div className="info-block">
             <label>Current Images ({product.images?.length || 0})</label>
             <div className="current-images-grid">
@@ -428,7 +450,6 @@ export default function EditProduct() {
             </div>
           </div>
 
-          {/* Current Model */}
           <div className="info-block">
             <label>3D Model</label>
             {product.hasModel ? (
@@ -447,7 +468,6 @@ export default function EditProduct() {
             )}
           </div>
 
-          {/* Current Video */}
           <div className="info-block">
             <label>Video</label>
             {product.video ? (
@@ -467,18 +487,17 @@ export default function EditProduct() {
           </div>
         </div>
 
-        {/* Right Column - Edit Form */}
+        {/* Right Column */}
         <div className="edit-form-section">
           <h3>Update Product Information</h3>
 
-          {/* Category Selector */}
           <div className="form-group">
             <label>Change Category</label>
             <select
               value={selectedCategory}
               onChange={(e) => {
                 setSelectedCategory(e.target.value);
-                setSubCategory(""); // Reset subcategory when category changes
+                setSubCategory("");
               }}
               className="category-select"
             >
@@ -495,7 +514,6 @@ export default function EditProduct() {
             )}
           </div>
 
-          {/* Subcategory Selector */}
           {hasSubCategories && (
             <div className="form-group subcategory-group">
               <label>
@@ -522,7 +540,6 @@ export default function EditProduct() {
             </div>
           )}
 
-          {/* Basic Info */}
           <div className="form-group">
             <label>Product Name *</label>
             <input
@@ -557,7 +574,41 @@ export default function EditProduct() {
             />
           </div>
 
-          {/* Upload New Images */}
+          {/* Ready Stock Section */}
+          <div className="form-group ready-stock-section">
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={inReadyStock}
+                onChange={(e) => {
+                  setInReadyStock(e.target.checked);
+                  if (!e.target.checked) {
+                    setReadyStockQuantity("");
+                  }
+                }}
+              />
+              <span className="checkbox-text">
+                📦 Add to Ready Stock
+              </span>
+            </label>
+            
+            {inReadyStock && (
+              <div className="quantity-input-wrapper">
+                <input
+                  type="number"
+                  value={readyStockQuantity}
+                  onChange={(e) => setReadyStockQuantity(e.target.value)}
+                  placeholder="Enter quantity"
+                  min="1"
+                  className="quantity-input"
+                />
+                <small className="form-hint">
+                  Number of units available for immediate delivery
+                </small>
+              </div>
+            )}
+          </div>
+
           <div className="form-group">
             <label>
               {replaceImages ? "Replace All Images" : "Add New Images"}
@@ -604,7 +655,6 @@ export default function EditProduct() {
             )}
           </div>
 
-          {/* Upload New Model */}
           <div className="form-group">
             <label>Upload New 3D Model (GLB/GLTF)</label>
             <input
@@ -619,7 +669,6 @@ export default function EditProduct() {
             <small className="form-hint">Will replace existing model if any</small>
           </div>
 
-          {/* Upload New Video */}
           <div className="form-group">
             <label>Upload New Video</label>
             <input
@@ -634,7 +683,6 @@ export default function EditProduct() {
             <small className="form-hint">Will replace existing video if any</small>
           </div>
 
-          {/* Save Button */}
           <div className="form-actions">
             <button
               className="save-btn"

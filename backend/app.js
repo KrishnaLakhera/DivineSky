@@ -23,7 +23,8 @@ app.use("/auth", authRoutes);            // 🔐 login
 app.use("/admin", adminUploadRoutes);    // 🔐 admin protected
 app.use("/admin", adminUpdateRoutes);    // 🔐 admin protected
 app.use("/admin", readyStockAdminRoutes); // 🔐 admin ready stock
-app.use("/products", productRoutes);     // 🌍 public
 app.use("/products", readyStockPublicRoutes); // 🌍 public ready stock
+app.use("/products", productRoutes);     // 🌍 public
+
 
 module.exports = app;
