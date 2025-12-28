@@ -2,6 +2,9 @@ import { Routes, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import Navbar from "./components/Navbar";
+import Contact from "./components/Contact";
+import About from "./components/About";
+
 import Catalog from "./pages/Catalog";
 import LandingPage from "./pages/Landingpage";
 import ProductDetail from "./pages/ProductDetail";
@@ -52,6 +55,27 @@ export default function App() {
         }
       />
 
+      <Route
+        path="/contact"
+        element={
+          <>
+            <Navbar search={search} setSearch={setSearch} />
+            {search === "" && <Contact  />}
+            {search !== "" && <Catalog search={search} />}
+          </>
+        }
+      />
+      
+      <Route
+        path="/about"
+        element={
+          <>
+            <Navbar search={search} setSearch={setSearch} />
+            {search === "" && <About />}
+            {search !== "" && <Catalog search={search} />}
+          </>
+        }
+      />
       <Route
         path="/product/:category/:id"
         element={

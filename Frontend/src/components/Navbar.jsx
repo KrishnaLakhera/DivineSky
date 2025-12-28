@@ -101,6 +101,11 @@ export default function Navbar({ search, setSearch }) {
               About
             </Link>
           </li>
+          <li>
+            <Link to="/contact" onClick={handleLinkClick}>
+              Contact
+            </Link>
+          </li>
           {/* Ready Stock Link - Mobile Menu Only */}
           <li className="mobile-only-link">
             <Link to="/ready-stock" onClick={handleLinkClick}>
