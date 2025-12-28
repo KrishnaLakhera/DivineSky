@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { CATEGORIES_OBJECT } from "../../config/categories";
+import { API_ENDPOINTS } from "../../config/api";
 import "../../styles/Admin/Upload.css";
 
 export default function Upload() {
@@ -165,7 +166,7 @@ export default function Upload() {
     console.log("Video:", video ? video.name : "No video");
 
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", "https://divinesky.onrender.com/admin/upload");
+    xhr.open("POST", API_ENDPOINTS.admin.upload());
 
     const token = localStorage.getItem("admin_token");
     if (token) {

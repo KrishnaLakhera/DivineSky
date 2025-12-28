@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { API_ENDPOINTS } from "../config/api";
 import "../styles/Admin/AdminLogin.css";
 
 export default function AdminLogin() {
@@ -20,7 +21,7 @@ export default function AdminLogin() {
     setLoading(true);
 
     try {
-      const res = await fetch("https://divinesky.onrender.com/auth/login", {
+      const res = await fetch(API_ENDPOINTS.auth.login(), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

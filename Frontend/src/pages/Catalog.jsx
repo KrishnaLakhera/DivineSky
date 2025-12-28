@@ -7,6 +7,7 @@ import ErrorState from "../components/Catalog/ErrorState";
 import EmptyState from "../components/Catalog/EmptyState";
 import useInfiniteScroll from "../hooks/useInfiniteScroll";
 import { CATEGORIES, getCategoryValues } from "../config/categories";
+import { API_ENDPOINTS } from "../config/api";
 import "../styles/Catalog/Catalog.css";
 import "../styles/Catalog/Catalog-responsive.css";
 
@@ -52,52 +53,48 @@ export default function Catalog({ search }) {
     }
   }, [searchParams]);
 
-  // OPTIMIZED: Fetch products with parallel requests
+  // SUPER OPTIMIZED: Use single backend endpoint for "all" category
   const fetchProducts = useCallback(async (category) => {
     try {
-      setLoading(true);
       setError(null);
       setPage(1);
 
       let productsArray = [];
 
       if (category === "all") {
-        // Fetch ALL products from all categories IN PARALLEL
-        const categoryValues = getCategoryValues();
+        // 🚀 NEW: Single optimized request to backend
+        setLoading(true);
         
-        // Use Promise.allSettled for better error handling
-        const results = await Promise.allSettled(
-          categoryValues.map(catValue =>
-            fetch(`https://divinesky.onrender.com/products/${catValue}`)
-              .then(res => {
-                if (!res.ok) throw new Error(`Failed to fetch ${catValue}`);
-                return res.json();
-              })
-          )
+        const response = await fetch(
+          API_ENDPOINTS.products.getAll(1, 200), // Fetch 200 products at once
+          { signal: AbortSignal.timeout(15000) } // 15 second timeout
         );
-
-        // Extract successful results
-        productsArray = results
-          .filter(result => result.status === 'fulfilled')
-          .flatMap(result => {
-            const data = result.value;
-            if (data.success) {
-              return Array.isArray(data.products) 
-                ? data.products 
-                : Object.values(data.products || {});
-            }
-            return [];
-          });
-
-        // Log any failures (optional)
-        const failures = results.filter(r => r.status === 'rejected');
-        if (failures.length > 0) {
-          console.warn(`${failures.length} categories failed to load`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
 
+        const data = await response.json();
+
+        if (data.success && data.products) {
+          productsArray = data.products;
+        }
+        
+        setAllProducts(productsArray);
+        setDisplayedProducts(productsArray.slice(0, itemsPerPage));
+        setHasMore(productsArray.length > itemsPerPage);
+        setLoading(false);
+        
+        console.log(`✅ Loaded ${productsArray.length} products in ONE request!`);
+
       } else {
-        // Fetch specific category
-        const response = await fetch(`https://divinesky.onrender.com/products/${category}`);
+        // Fetch specific category (single request - fast)
+        setLoading(true);
+        
+        const response = await fetch(
+          API_ENDPOINTS.products.getByCategory(category),
+          { signal: AbortSignal.timeout(10000) }
+        );
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -110,17 +107,18 @@ export default function Catalog({ search }) {
             ? data.products 
             : Object.values(data.products || {});
         }
+        
+        setAllProducts(productsArray);
+        setDisplayedProducts(productsArray.slice(0, itemsPerPage));
+        setHasMore(productsArray.length > itemsPerPage);
+        setLoading(false);
       }
       
-      setAllProducts(productsArray);
-      // Initially load only itemsPerPage products
-      setDisplayedProducts(productsArray.slice(0, itemsPerPage));
-      setHasMore(productsArray.length > itemsPerPage);
-      setLoading(false);
     } catch (err) {
       console.error("Fetch error:", err);
       setError(err.message);
       setLoading(false);
+      setIsProgressiveLoading(false);
       setAllProducts([]);
       setDisplayedProducts([]);
       setHasMore(false);

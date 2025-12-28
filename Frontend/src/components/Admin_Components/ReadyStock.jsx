@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import ProductCard from "../Catalog/ProductCard";
+import { API_ENDPOINTS } from "../../config/api";
 import "../../styles/ReadyStock.css";
 
 export default function ReadyStock() {
@@ -14,10 +15,7 @@ export default function ReadyStock() {
     const fetchProducts = async () => {
       try {
         setLoading(true);
-        // ✅ FIXED: Changed from single quotes to backticks for template literal
-        const response = await fetch(
-          `https://divinesky.onrender.com/products/ready-stock?page=${page}&limit=20`
-        );
+        const response = await fetch(API_ENDPOINTS.products.getReadyStock(page, 20));
         const data = await response.json();
 
         if (data.success) {

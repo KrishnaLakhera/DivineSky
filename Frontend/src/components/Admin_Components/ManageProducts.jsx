@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { CATEGORIES, getCategoryValues } from "../../config/categories";
+import { API_ENDPOINTS } from "../../config/api";
 import "../../styles/Admin/ManageProducts.css";
 
 export default function ManageProducts() {
@@ -26,7 +27,7 @@ export default function ManageProducts() {
       // Fetch all categories in parallel
       const results = await Promise.allSettled(
         categoryValues.map(category =>
-          fetch(`https://divinesky.onrender.com/products/${category}`)
+          fetch(API_ENDPOINTS.products.getByCategory(category))
             .then(res => {
               if (!res.ok) throw new Error(`Failed to fetch ${category}`);
               return res.json();
@@ -71,7 +72,7 @@ export default function ManageProducts() {
     try {
       const token = localStorage.getItem("admin_token");
       const response = await fetch(
-        `https://divinesky.onrender.com/admin/products/${product.category}/${product.id}`,
+        API_ENDPOINTS.admin.deleteProduct(product.category, product.id),
         {
           method: "DELETE",
           headers: {

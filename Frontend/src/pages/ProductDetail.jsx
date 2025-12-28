@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getCategoryLabel } from "../config/categories";
+import { API_ENDPOINTS } from "../config/api";
 import "@google/model-viewer";
 import "../styles/ProductDetail.css";
 
@@ -28,7 +29,7 @@ export default function ProductDetail() {
 
       console.log("Fetching product:", id, "from category:", category);
 
-      const response = await fetch(`https://divinesky.onrender.com/products/${category}/${id}`);
+      const response = await fetch(API_ENDPOINTS.products.getByCategoryAndId(category, id));
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

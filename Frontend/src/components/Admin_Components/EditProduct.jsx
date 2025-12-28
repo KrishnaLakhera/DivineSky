@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { CATEGORIES_OBJECT, getCategoryLabel, getSubCategoryLabel } from "../../config/categories";
+import { API_ENDPOINTS } from "../../config/api";
 import "../../styles/Admin/EditProduct.css";
 
 export default function EditProduct() {
@@ -41,7 +42,7 @@ export default function EditProduct() {
       setLoading(true);
       const token = localStorage.getItem("admin_token");
       const response = await fetch(
-        `https://divinesky.onrender.com/admin/products/${category}/${id}`,
+        API_ENDPOINTS.admin.getProduct(category, id),
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -146,7 +147,7 @@ export default function EditProduct() {
       const token = localStorage.getItem("admin_token");
       
       const response = await fetch(
-        `https://divinesky.onrender.com/admin/products/${category}/${id}/remove-image`,
+        API_ENDPOINTS.admin.removeImage(category, id),
         {
           method: "PATCH",
           headers: {
@@ -183,7 +184,7 @@ export default function EditProduct() {
       formData.append("removeModel", "true");
 
       const response = await fetch(
-        `https://divinesky.onrender.com/admin/products/${category}/${id}`,
+        API_ENDPOINTS.admin.updateProduct(category, id),
         {
           method: "PUT",
           headers: {
@@ -219,7 +220,7 @@ export default function EditProduct() {
       formData.append("removeVideo", "true");
 
       const response = await fetch(
-        `https://divinesky.onrender.com/admin/products/${category}/${id}`,
+        API_ENDPOINTS.admin.updateProduct(category, id),
         {
           method: "PUT",
           headers: {
@@ -321,7 +322,7 @@ export default function EditProduct() {
       }
 
       const response = await fetch(
-        `https://divinesky.onrender.com/admin/products/${category}/${id}`,
+        API_ENDPOINTS.admin.updateProduct(category, id),
         {
           method: "PUT",
           headers: {
