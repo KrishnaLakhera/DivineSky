@@ -65,7 +65,7 @@ export default function Navbar({ search, setSearch }) {
       <nav className="navbar">
         {/* Logo */}
         <Link to="/" className="logo">
-          DIVIINE<span>SKY</span>
+          DIVINE<span>SKY</span>
         </Link>
 
         {/* Center Group: Search + Ready Stock (Desktop Only) */}

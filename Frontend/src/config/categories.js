@@ -59,7 +59,7 @@ export const CATEGORIES = [
   },
   { 
     value: "sculptures", 
-    label: "3D Reviels",
+    label: "3D Reliefs",
     subCategories: [
       { value: "Gaura-Lila", label: "Gaura Lila" },
       { value: "Krishna-Lila", label: "Krishna Lila" },
