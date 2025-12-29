@@ -124,33 +124,7 @@ export default function Contact() {
           </div>
         </div>
 
-        {/* Additional Info 
-        <div className="additional-info">
-          <div className="info-section">
-            <h3>🏛️ About Our Workshop</h3>
-            <p>
-              Divine Sky specializes in creating sacred altars, deity statues, and spiritual artifacts. 
-              Each piece is handcrafted with devotion and precision by our skilled artisans.
-            </p>
-          </div>
-
-          <div className="info-section">
-            <h3>🎨 Custom Orders</h3>
-            <p>
-              We accept custom orders for temples, homes, and spiritual centers. 
-              Contact us to discuss your requirements and get a personalized quote.
-            </p>
-          </div>
-
-          <div className="info-section">
-            <h3>🚚 Shipping & Delivery</h3>
-            <p>
-              We ship worldwide with secure packaging. Delivery times vary by location. 
-              International orders may require 2-4 weeks.
-            </p>
-          </div>          
-        </div>
-        */}
+        
       </div>
     </div>
   );

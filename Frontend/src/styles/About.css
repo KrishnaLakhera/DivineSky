@@ -1,4 +1,4 @@
-/* About.css - Enhanced Version */
+/* About.css - Divine Sky Theme */
 
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,600;1,400&display=swap');
 
@@ -12,7 +12,7 @@
   font-family: 'Lora', serif;
   color: #2c2c2c;
   line-height: 1.9;
-  background: linear-gradient(135deg, #fff8f0 0%, #ffefd5 50%, #fff5e6 100%);
+  background: linear-gradient(180deg, #fdfbf7 0%, #ffffff 100%);
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
@@ -26,21 +26,20 @@
   right: 0;
   bottom: 0;
   background: 
-    radial-gradient(circle at 20% 80%, rgba(255, 107, 53, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 80% 20%, rgba(255, 165, 0, 0.05) 0%, transparent 50%);
+    radial-gradient(circle at 20% 80%, rgba(217, 119, 6, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(245, 158, 11, 0.03) 0%, transparent 50%);
   pointer-events: none;
   z-index: 0;
 }
 
 /* Hero Section */
 .hero-section {
-  background: linear-gradient(135deg, #49506f 0%, #2d3748 100%);
+  background: linear-gradient(135deg, #1a1f35 0%, #2d3748 100%);
   text-align: center;
   padding: 100px 20px 80px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
   position: relative;
   overflow: hidden;
-  clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
 }
 
 .hero-section::before {
@@ -57,11 +56,12 @@
 .hero-section::after {
   content: '';
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 100px;
-  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.1));
+  inset: 0;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(212, 175, 55, 0.15),
+    transparent 70%
+  );
 }
 
 @keyframes float {
@@ -71,9 +71,10 @@
 
 .greeting {
   font-family: 'Cinzel', serif;
-  font-size: 3em;
+  font-size: clamp(2rem, 5vw, 3em);
   font-weight: 600;
   margin-bottom: 15px;
+  color: #ffd966;
   text-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3);
   position: relative;
   z-index: 2;
@@ -94,7 +95,7 @@
 
 .company-name {
   font-family: 'Cinzel', serif;
-  font-size: 4.5em;
+  font-size: clamp(2.5rem, 7vw, 4.5em);
   font-weight: 700;
   margin-bottom: 20px;
   text-shadow: 4px 4px 12px rgba(0, 0, 0, 0.4);
@@ -102,7 +103,7 @@
   position: relative;
   z-index: 2;
   animation: fadeInUp 1s ease 0.2s both;
-  background: linear-gradient(to right, #fff, #ffe4b5, #fff);
+  background: linear-gradient(135deg, #e5c063, #ffd966);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -120,8 +121,9 @@
 }
 
 .tagline {
-  font-size: 1.5em;
+  font-size: clamp(1rem, 2.5vw, 1.5em);
   font-style: italic;
+  color: #e2e8f0;
   opacity: 0.95;
   position: relative;
   z-index: 2;
@@ -139,7 +141,7 @@
 .content-wrapper {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 80px 20px;
+  padding: 80px 40px;
   position: relative;
   z-index: 1;
 }
@@ -147,43 +149,24 @@
 /* Sections */
 section {
   margin-bottom: 60px;
-  background: rgba(255, 255, 255, 0.95);
+  background: white;
   padding: 50px;
   border-radius: 20px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   transition: all 0.4s ease;
   position: relative;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 165, 0, 0.2);
-}
-
-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 5px;
-  background: linear-gradient(90deg, #ff6b35, #ffa726, #ff6b35);
-  border-radius: 20px 20px 0 0;
-  background-size: 200% 100%;
-  animation: gradientShift 3s ease infinite;
-}
-
-@keyframes gradientShift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  border-top: 4px solid #d97706;
 }
 
 section:hover {
-  transform: translateY(-10px) scale(1.01);
-  box-shadow: 0 20px 60px rgba(255, 107, 53, 0.25);
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(217, 119, 6, 0.2);
 }
 
 section h3 {
   font-family: 'Cinzel', serif;
-  color: #d84315;
-  font-size: 2.3em;
+  color: #1f2937;
+  font-size: clamp(1.6rem, 3vw, 2.3em);
   margin-bottom: 30px;
   padding-bottom: 15px;
   display: inline-block;
@@ -199,7 +182,7 @@ section h3::after {
   left: 0;
   width: 100%;
   height: 4px;
-  background: linear-gradient(90deg, #ff6b35, #ffa726);
+  background: linear-gradient(90deg, #f59e0b, #d97706);
   border-radius: 2px;
 }
 
@@ -207,7 +190,7 @@ section h3::before {
   content: '✦';
   position: absolute;
   left: -35px;
-  color: #ffa726;
+  color: #f59e0b;
   font-size: 0.8em;
   animation: sparkle 2s ease infinite;
 }
@@ -218,38 +201,44 @@ section h3::before {
 }
 
 section p {
-  font-size: 1.15em;
+  font-size: clamp(1rem, 1.8vw, 1.15em);
   margin-bottom: 20px;
   text-align: justify;
-  color: #444;
+  color: #4b5563;
   line-height: 2;
+}
+
+section strong {
+  color: #d97706;
+  font-weight: 600;
 }
 
 /* Intro Section */
 .intro-section {
-  background: linear-gradient(135deg, #fff9f0 0%, #fffcf7 100%);
-  border-left: 6px solid #ff6b35;
-  box-shadow: 0 10px 40px rgba(255, 107, 53, 0.15);
+  background: linear-gradient(135deg, #fffbf5 0%, #ffffff 100%);
+  border-left: 6px solid #d97706;
 }
 
 .intro-text {
-  font-size: 1.2em;
-  color: #333;
+  font-size: clamp(1.05rem, 2vw, 1.2em);
+  color: #374151;
+  line-height: 2.1;
 }
 
 .mission-text {
-  color: #555;
+  color: #4b5563;
   font-style: italic;
-  background: linear-gradient(135deg, rgba(255, 167, 38, 0.1), rgba(255, 107, 53, 0.1));
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.08), rgba(217, 119, 6, 0.08));
   padding: 25px;
   border-radius: 12px;
-  border-left: 4px solid #ffa726;
+  border-left: 4px solid #f59e0b;
   margin-top: 20px;
+  line-height: 2;
 }
 
 /* Craftsmanship Section */
 .craftsmanship-section {
-  background: linear-gradient(135deg, #fffaf5 0%, #fff5eb 100%);
+  background: linear-gradient(135deg, #fefcf9 0%, #fffaf5 100%);
   position: relative;
 }
 
@@ -259,18 +248,18 @@ section p {
   right: 30px;
   bottom: 30px;
   font-size: 80px;
-  opacity: 0.1;
+  opacity: 0.08;
   transform: rotate(-15deg);
 }
 
 /* Journey Section */
 .journey-section {
-  background: linear-gradient(135deg, #fef9f3 0%, #fff8ed 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #fdfbf7 100%);
 }
 
 /* Locations Grid */
 .reach-section {
-  background: linear-gradient(135deg, #fffcf7 0%, #fff9f0 100%);
+  background: linear-gradient(135deg, #fffcf9 0%, #ffffff 100%);
 }
 
 .locations-grid {
@@ -281,11 +270,11 @@ section p {
 }
 
 .location-group {
-  background: linear-gradient(135deg, #ffffff 0%, #fffaf5 100%);
+  background: white;
   padding: 35px;
   border-radius: 15px;
-  border: 3px solid #ffa726;
-  box-shadow: 0 8px 25px rgba(255, 107, 53, 0.15);
+  border: 3px solid #f59e0b;
+  box-shadow: 0 4px 20px rgba(217, 119, 6, 0.12);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
@@ -294,29 +283,29 @@ section p {
 .location-group::before {
   content: '';
   position: absolute;
-  top: -50%;
-  right: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(255, 167, 38, 0.1) 0%, transparent 70%);
-  transition: all 0.5s ease;
-  transform: scale(0);
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #f59e0b, #d97706);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
 }
 
 .location-group:hover::before {
-  transform: scale(1);
+  transform: scaleX(1);
 }
 
 .location-group:hover {
   transform: translateY(-8px);
-  box-shadow: 0 15px 40px rgba(255, 107, 53, 0.25);
-  border-color: #ff6b35;
+  box-shadow: 0 12px 40px rgba(217, 119, 6, 0.25);
+  border-color: #d97706;
 }
 
 .location-group h4 {
   font-family: 'Cinzel', serif;
-  color: #d84315;
-  font-size: 1.7em;
+  color: #1f2937;
+  font-size: clamp(1.3rem, 2.5vw, 1.7em);
   margin-bottom: 20px;
   text-align: center;
   padding-bottom: 15px;
@@ -333,7 +322,7 @@ section p {
   transform: translateX(-50%);
   width: 60%;
   height: 3px;
-  background: linear-gradient(90deg, transparent, #ffa726, transparent);
+  background: linear-gradient(90deg, transparent, #f59e0b, transparent);
   border-radius: 2px;
 }
 
@@ -346,13 +335,13 @@ section p {
 .location-group li {
   padding: 12px 0 12px 30px;
   position: relative;
-  color: #555;
+  color: #6b7280;
   transition: all 0.3s ease;
-  font-size: 1.05em;
+  font-size: clamp(0.95rem, 1.5vw, 1.05em);
 }
 
 .location-group li:hover {
-  color: #ff6b35;
+  color: #d97706;
   padding-left: 35px;
 }
 
@@ -360,27 +349,27 @@ section p {
   content: '◆';
   position: absolute;
   left: 0;
-  color: #ffa726;
+  color: #f59e0b;
   font-size: 1.1em;
   transition: all 0.3s ease;
 }
 
 .location-group li:hover::before {
-  color: #ff6b35;
+  color: #d97706;
   transform: scale(1.3);
 }
 
 /* Commitment Section */
 .commitment-section {
-  background: linear-gradient(135deg, #fff5eb 0%, #ffe4c4 100%);
-  border: 2px solid #ffa726;
+  background: linear-gradient(135deg, #fffaf5 0%, #fef7ef 100%);
+  border: 2px solid #f59e0b;
 }
 
 /* CTA Section */
 .cta-section {
-  background: linear-gradient(135deg, #d84315 0%, #ff6b35 25%, #ffa726 75%, #ffb74d 100%);
+  background: linear-gradient(135deg, #1a1f35, #2d3748);
   color: white;
-  box-shadow: 0 15px 50px rgba(255, 107, 53, 0.4);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
   border: none;
   position: relative;
   overflow: hidden;
@@ -389,17 +378,12 @@ section p {
 .cta-section::before {
   content: '';
   position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-  animation: rotate 20s linear infinite;
-}
-
-@keyframes rotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  inset: 0;
+  background: radial-gradient(
+    circle at 30% 50%,
+    rgba(212, 175, 55, 0.1),
+    transparent 70%
+  );
 }
 
 .cta-box {
@@ -409,93 +393,88 @@ section p {
 }
 
 .cta-box h3 {
-  color: white;
+  color: #ffd966;
   margin: 0 auto 25px;
-  font-size: 2.5em;
+  font-size: clamp(1.8rem, 3vw, 2.5em);
 }
 
 .cta-box h3::after {
-  background: white;
+  background: linear-gradient(90deg, transparent, #ffd966, transparent);
 }
 
 .cta-box h3::before {
-  color: white;
+  color: #ffd966;
 }
 
 .cta-box p {
-  font-size: 1.25em;
+  font-size: clamp(1.05rem, 2vw, 1.25em);
   text-align: center;
+  color: #e2e8f0;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
   line-height: 2;
 }
 
 .cta-tagline {
-  font-size: 1.4em !important;
+  font-size: clamp(1.15rem, 2.2vw, 1.4em) !important;
   font-weight: 700;
   margin-top: 25px;
   font-style: italic;
   padding: 20px;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 10px;
   backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 217, 102, 0.3);
 }
 
 /* Responsive Design */
-@media (max-width: 968px) {
-  .hero-section {
-    padding: 80px 20px 60px;
-  }
-
-  .greeting {
-    font-size: 2.2em;
-  }
-
-  .company-name {
-    font-size: 3.2em;
-  }
-
-  .tagline {
-    font-size: 1.2em;
+@media (max-width: 1024px) {
+  .content-wrapper {
+    padding: 60px 30px;
   }
 
   section {
-    padding: 35px;
+    padding: 40px;
   }
 
-  section h3 {
-    font-size: 1.9em;
+  .locations-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
   }
 }
 
 @media (max-width: 768px) {
   .hero-section {
-    padding: 60px 20px 40px;
-    clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%);
+    padding: 70px 20px 50px;
+  }
+
+  .hero-section::before {
+    font-size: 300px;
+    top: -80px;
+    right: -80px;
   }
 
   .greeting {
-    font-size: 1.9em;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
   }
 
   .company-name {
-    font-size: 2.8em;
-  }
-
-  .tagline {
-    font-size: 1.1em;
+    letter-spacing: 3px;
+    margin-bottom: 15px;
   }
 
   .content-wrapper {
-    padding: 50px 15px;
+    padding: 50px 20px;
   }
 
   section {
-    padding: 30px;
+    padding: 35px 30px;
     margin-bottom: 40px;
   }
 
-  section h3 {
-    font-size: 1.7em;
+  section h3::before {
+    left: -25px;
+    font-size: 0.7em;
   }
 
   .locations-grid {
@@ -503,51 +482,85 @@ section p {
     gap: 25px;
   }
 
-  section h3::before {
-    left: -25px;
+  .location-group {
+    padding: 30px 25px;
   }
 }
 
 @media (max-width: 480px) {
   .hero-section {
-    padding: 50px 15px 35px;
+    padding: 60px 15px 40px;
   }
 
   .hero-section::before {
-    font-size: 250px;
+    font-size: 200px;
+    top: -60px;
+    right: -60px;
   }
 
   .greeting {
-    font-size: 1.6em;
     letter-spacing: 1px;
   }
 
   .company-name {
-    font-size: 2.2em;
     letter-spacing: 2px;
   }
 
-  .tagline {
-    font-size: 1em;
+  .content-wrapper {
+    padding: 40px 15px;
   }
 
   section {
-    padding: 25px 20px;
+    padding: 30px 20px;
+    margin-bottom: 30px;
   }
 
-  section h3 {
-    font-size: 1.5em;
+  section h3::before {
+    left: -20px;
   }
 
   section p {
-    font-size: 1em;
+    text-align: left;
   }
 
   .location-group {
-    padding: 25px;
+    padding: 25px 20px;
   }
 
-  .cta-box h3 {
-    font-size: 2em;
+  .location-group li {
+    padding: 10px 0 10px 25px;
+  }
+
+  .craftsmanship-section::after {
+    font-size: 60px;
+    right: 20px;
+    bottom: 20px;
+  }
+
+  .cta-box {
+    padding: 0;
+  }
+
+  .cta-tagline {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 360px) {
+  .hero-section {
+    padding: 50px 12px 35px;
+  }
+
+  .content-wrapper {
+    padding: 35px 12px;
+  }
+
+  section {
+    padding: 25px 15px;
+    border-radius: 15px;
+  }
+
+  .location-group {
+    padding: 20px 15px;
   }
 }
