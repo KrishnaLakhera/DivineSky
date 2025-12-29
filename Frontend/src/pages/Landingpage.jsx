@@ -82,7 +82,7 @@ const Bridge = () => {
         <span>✦</span>
       </div>
       <p className="bridge-text">
-        Crafted with devotion • Experienced in detail
+        Crafted with Devotion • Delivered Worldwide
       </p>
     </div>
   );

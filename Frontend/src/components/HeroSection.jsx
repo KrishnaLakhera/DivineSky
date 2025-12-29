@@ -20,7 +20,7 @@ const HeroSection = ({ onExploreClick }) => {
           </h1>
 
           <p>
-            Divine Sky crafts premium altars, Prabhupada statues, and sacred
+            Divine Sky crafts premium altars, Prabhupada deities, and sacred
             paraphernalia, serving temples and devotees worldwide with
             authenticity, devotion, and excellence.
           </p>

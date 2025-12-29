@@ -6,7 +6,7 @@ const CategoryGallery = ({ categories, onCategoryClick }) => {
   return (
     <section className="category-gallery">
       <div className="category-header">
-        <h2>Explore Our Sacred Creations</h2>
+        <h2>Explore Our Sacred Offerings</h2>
         <p>
           Browse our handcrafted categories with immersive 3D & gallery views
         </p>
