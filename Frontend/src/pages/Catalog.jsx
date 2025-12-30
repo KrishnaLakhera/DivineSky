@@ -6,7 +6,7 @@ import LoadingState from "../components/Catalog/LoadingState";
 import ErrorState from "../components/Catalog/ErrorState";
 import EmptyState from "../components/Catalog/EmptyState";
 import useInfiniteScroll from "../hooks/useInfiniteScroll";
-import { CATEGORIES, getCategoryValues } from "../config/categories";
+import { CATEGORIES } from "../config/categories";
 import { API_ENDPOINTS } from "../config/api";
 import "../styles/Catalog/Catalog.css";
 import "../styles/Catalog/Catalog-responsive.css";
@@ -58,20 +58,31 @@ export default function Catalog({ search }) {
     try {
       setError(null);
       setPage(1);
+      setLoading(true);
 
       let productsArray = [];
 
       if (category === "all") {
-        // 🚀 NEW: Single optimized request to backend
-        setLoading(true);
-        
+        // 🚀 Single optimized request to backend
         const response = await fetch(
           API_ENDPOINTS.products.getAll(1, 200), // Fetch 200 products at once
-          { signal: AbortSignal.timeout(15000) } // 15 second timeout
+          { 
+            signal: AbortSignal.timeout(15000),
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            }
+          }
         );
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // Check if response is valid JSON
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          throw new Error("Response is not JSON");
         }
 
         const data = await response.json();
@@ -83,21 +94,30 @@ export default function Catalog({ search }) {
         setAllProducts(productsArray);
         setDisplayedProducts(productsArray.slice(0, itemsPerPage));
         setHasMore(productsArray.length > itemsPerPage);
-        setLoading(false);
         
         console.log(`✅ Loaded ${productsArray.length} products in ONE request!`);
 
       } else {
         // Fetch specific category (single request - fast)
-        setLoading(true);
-        
         const response = await fetch(
           API_ENDPOINTS.products.getByCategory(category),
-          { signal: AbortSignal.timeout(10000) }
+          { 
+            signal: AbortSignal.timeout(10000),
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            }
+          }
         );
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        // Check if response is valid JSON
+        const contentType = response.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          throw new Error("Response is not JSON");
         }
 
         const data = await response.json();
@@ -111,14 +131,14 @@ export default function Catalog({ search }) {
         setAllProducts(productsArray);
         setDisplayedProducts(productsArray.slice(0, itemsPerPage));
         setHasMore(productsArray.length > itemsPerPage);
-        setLoading(false);
       }
+      
+      setLoading(false);
       
     } catch (err) {
       console.error("Fetch error:", err);
       setError(err.message);
       setLoading(false);
-      setIsProgressiveLoading(false);
       setAllProducts([]);
       setDisplayedProducts([]);
       setHasMore(false);
