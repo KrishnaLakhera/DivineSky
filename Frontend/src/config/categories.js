@@ -37,9 +37,10 @@ export const CATEGORIES = [
     subCategories: [
       { value: "sp", label: "SP Deity" },
       { value: "guru-parampara", label: "Guru Parampara" },
+      { value: "gn-deity", label: "Gaur Nitai Deity" },
       { value: "haridas", label: "Srila Haridas Thakur Deity" },
       { value: "yashoda-damodara", label: "Yashoda Damodara" },
-      { value: "custom-deity", label: "Other Deity" },
+      { value: "custom-deity", label: "Other Deity" },    
     ]
   },
   { 
