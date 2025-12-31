@@ -172,46 +172,6 @@
   font-size: 1.3rem;
 }
 
-/* Social Links */
-.social-links {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 15px;
-  padding: 20px 0;
-}
-
-.connect-text {
-  color: #ffd966;
-  font-size: clamp(1rem, 1.8vw, 1.1rem);
-  font-weight: 500;
-  margin-right: 10px;
-}
-
-.social-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 45px;
-  height: 45px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-  color: #e2e8f0;
-  text-decoration: none;
-  font-size: 1.3rem;
-  transition: all 0.3s ease;
-  border: 2px solid transparent;
-  flex-shrink: 0;
-}
-
-.social-icon:hover {
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  transform: translateY(-5px) rotate(5deg);
-  box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4);
-  border-color: #ffd966;
-}
-
 hr {
   border: none;
   height: 1px;
@@ -265,7 +225,6 @@ hr {
   transition: all 0.3s ease;
 }
 
-/* Avatar Image */
 .avatar-image {
   width: 100px;
   height: 100px;
@@ -316,6 +275,59 @@ hr {
 }
 
 /* ================================
+   SOCIAL LINKS
+================================ */
+.social-links {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 0;
+  margin: 0;
+}
+
+.social-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  border: 1.5px solid rgba(255, 217, 102, 0.2);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.social-icon img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  filter: brightness(0.9) contrast(1.1);
+  transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+  border-color: #ffd966;
+}
+
+.social-icon:hover img {
+  filter: brightness(1.2) contrast(1.2);
+  transform: scale(1.1);
+}
+
+.social-icon:active {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
+}
+
+/* ================================
    RESPONSIVE DESIGN
 ================================ */
 
@@ -340,11 +352,7 @@ hr {
     gap: 25px;
   }
 
-  .avatar {
-    width: 90px;
-    height: 90px;
-  }
-
+  .avatar,
   .avatar-image {
     width: 90px;
     height: 90px;
@@ -393,6 +401,20 @@ hr {
   .footer-bottom-content {
     padding: 20px 20px 0;
   }
+
+  .social-links {
+    gap: 10px;
+  }
+
+  .social-icon {
+    width: 30px;
+    height: 30px;
+  }
+
+  .social-icon img {
+    width: 16px;
+    height: 16px;
+  }
 }
 
 /* Mobile Phones */
@@ -430,18 +452,26 @@ hr {
     height: 80px;
   }
 
-  .social-icon {
-    width: 40px;
-    height: 40px;
-    font-size: 1.2rem;
-  }
-
   .footer-bottom-content {
     padding: 18px 15px;
   }
 
   hr {
     margin: 0 20px;
+  }
+
+  .social-links {
+    gap: 8px;
+  }
+
+  .social-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .social-icon img {
+    width: 15px;
+    height: 15px;
   }
 }
 

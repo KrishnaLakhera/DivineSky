@@ -5,6 +5,7 @@ import Navbar from "./components/Navbar";
 import Contact from "./components/Contact";
 import About from "./components/About";
 import Footer from "./components/Footer";
+import Testimonials from "./components/Testimonials";
 
 import Catalog from "./pages/Catalog";
 import LandingPage from "./pages/Landingpage";
@@ -47,6 +48,7 @@ export default function App() {
       <Route path="/" element={
        <>
        <LandingPage />
+       <Testimonials />
        <Footer />
        </> 
     }
@@ -68,7 +70,7 @@ export default function App() {
         element={
           <>
             <Navbar search={search} setSearch={setSearch} />
-            {search === "" && <Contact  />}
+            {search === "" && <> <Contact /> <Footer /> </>}
             {search !== "" && <Catalog search={search} />}
           </>
         }
@@ -79,7 +81,7 @@ export default function App() {
         element={
           <>
             <Navbar search={search} setSearch={setSearch} />
-            {search === "" && <About />}
+            {search === "" && <> <About /> <Footer /> </>}
             {search !== "" && <Catalog search={search} />}
           </>
         }
@@ -125,7 +127,13 @@ export default function App() {
         }
       />
 
-     <Route path="/ready-stock" element={<ReadyStock />} />
+     <Route path="/ready-stock" element={
+      <>
+          <Navbar search={search} setSearch={setSearch} />
+          <ReadyStock /> 
+          <Footer /> 
+      </>
+      } />
     </Routes>
   );
 }
