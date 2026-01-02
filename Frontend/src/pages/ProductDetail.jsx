@@ -23,7 +23,7 @@ export default function ProductDetail() {
   const [touchEnd, setTouchEnd] = useState(0);
 
   // WhatsApp number
-  const WHATSAPP_NUMBER = "919630300426";
+  const WHATSAPP_NUMBER = "919713600059";
 
   // Minimum swipe distance (in px)
   const minSwipeDistance = 50;

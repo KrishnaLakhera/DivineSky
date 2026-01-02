@@ -98,7 +98,7 @@ export default function Contact() {
         <div className="quick-actions">
           <h2>Get In Touch</h2>
           <div className="action-buttons">
-            <a href="mailto:info@divinesky.com" className="action-btn email-btn">
+            <a href="mailto:sales.rrmc@gmail.com" className="action-btn email-btn">
               <span className="btn-icon">📧</span>
               <span className="btn-text">
                 <strong>Send Email</strong>
@@ -106,15 +106,15 @@ export default function Contact() {
               </span>
             </a>
 
-            <a href="tel:+919876543210" className="action-btn call-btn">
+            <a href="tel:+919713600059" className="action-btn call-btn">
               <span className="btn-icon">📞</span>
               <span className="btn-text">
                 <strong>Call Now</strong>
-                <small>+91 98765 43210</small>
+                <small>+91 97136 00059</small>
               </span>
             </a>
 
-            <a href="https://wa.me/919630300426" target="_blank" rel="noopener noreferrer" className="action-btn whatsapp-btn">
+            <a href="https://wa.me/919713600059" target="_blank" rel="noopener noreferrer" className="action-btn whatsapp-btn">
               <span className="btn-icon">💬</span>
               <span className="btn-text">
                 <strong>WhatsApp</strong>

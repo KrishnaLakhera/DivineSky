@@ -49,7 +49,7 @@ export default function Footer() {
               <span className="contact-icon">📱</span>
               <span>+91 98765 43210</span>
             </a>
-            <a href="https://wa.me/919630300426" target="_blank" rel="noopener noreferrer" className="contact-item">
+            <a href="https://wa.me/919713600059" target="_blank" rel="noopener noreferrer" className="contact-item">
               <span className="contact-icon">💬</span>
               <span>WhatsApp Us</span>
             </a>
@@ -100,7 +100,7 @@ export default function Footer() {
           <a href="https://www.youtube.com/@iskconaltars2596" target="_blank" rel="noopener noreferrer" className="social-icon" aria-label="YouTube">
            <img src="../../youtube.webp" alt="YouTube" className="social-icon" />
           </a>
-          <a href="https://instagram.com/divinesky" target="_blank" rel="noopener noreferrer" className="social-icon" aria-label="Instagram">
+          <a href="https://www.instagram.com/iskcon_ujjain_altars/" target="_blank" rel="noopener noreferrer" className="social-icon" aria-label="Instagram">
            <img src="../../instagram.webp" alt="Instagram" className="social-icon" />
           </a>
           <a href="https://twitter.com/divinesky" target="_blank" rel="noopener noreferrer" className="social-icon" aria-label="Twitter">
