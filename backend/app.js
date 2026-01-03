@@ -3,6 +3,7 @@ const cors = require("cors");
 
 const authRoutes = require("./routes/auth");
 const adminUploadRoutes = require("./routes/admin.upload.routes");
+const testimonialsRoutes = require("backend\routes\testimonials");
 const productRoutes = require("./routes/products.routes");
 const adminUpdateRoutes = require("./routes/admin-update.route");
 const readyStockAdminRoutes = require('./routes/ready-stock.admin.routes');
@@ -25,6 +26,6 @@ app.use("/admin", adminUpdateRoutes);    // 🔐 admin protected
 app.use("/admin", readyStockAdminRoutes); // 🔐 admin ready stock
 app.use("/products", readyStockPublicRoutes); // 🌍 public ready stock
 app.use("/products", productRoutes);     // 🌍 public
-
+app.use("/api/testimonials", testimonialsRoutes);
 
 module.exports = app;

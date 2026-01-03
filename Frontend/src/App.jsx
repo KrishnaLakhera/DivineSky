@@ -17,6 +17,8 @@ import AdminRoute from "./routes/AdminRoute";
 import ManageProducts from "./components/Admin_Components/ManageProducts.jsx";
 import EditProduct from "./components/Admin_Components/EditProduct.jsx";
 import ReadyStock from "./components/Admin_Components/ReadyStock.jsx";
+import ManageTestimonials from "./components/Admin_Components/ManageTestimonials";
+
 
 export default function App() {
   const [search, setSearch] = useState("");
@@ -126,6 +128,8 @@ export default function App() {
           </AdminRoute>
         }
       />
+
+      <Route path="/admin/testimonials" element={<ManageTestimonials />} />
 
      <Route path="/ready-stock" element={
       <>

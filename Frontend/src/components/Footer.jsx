@@ -41,13 +41,13 @@ export default function Footer() {
         <div className="footer-section footer-center">
           <h3 className="footer-heading">Get In Touch</h3>
           <div className="contact-info">
-            <a href="mailto:info@divinesky.com" className="contact-item">
+            <a href="mailto:sales.rmmc@gmail.com" className="contact-item">
               <span className="contact-icon">📧</span>
-              <span>info@divinesky.com</span>
+              <span>sales.rmmc@gmail.com</span>
             </a>
-            <a href="tel:+919876543210" className="contact-item">
+            <a href="tel:+919713600059" className="contact-item">
               <span className="contact-icon">📱</span>
-              <span>+91 98765 43210</span>
+              <span>+91 97136 00059</span>
             </a>
             <a href="https://wa.me/919713600059" target="_blank" rel="noopener noreferrer" className="contact-item">
               <span className="contact-icon">💬</span>

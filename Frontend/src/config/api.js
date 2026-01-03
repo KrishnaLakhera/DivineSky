@@ -36,6 +36,14 @@ export const API_ENDPOINTS = {
     login: () => `${API_BASE_URL}/auth/login`,
     register: () => `${API_BASE_URL}/auth/register`,
   },
+
+  // Testimonials
+  testimonials: {
+    getAll: () => `${API_BASE_URL}/api/testimonials`,
+    create: () => `${API_BASE_URL}/api/testimonials`,
+    update: (id) => `${API_BASE_URL}/api/testimonials/${id}`,
+    delete: (id) => `${API_BASE_URL}/api/testimonials/${id}`,
+  },
 };
 
 // Export base URL for direct use if needed

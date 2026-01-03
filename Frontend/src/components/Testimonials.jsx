@@ -1,52 +1,77 @@
 import { useState, useEffect, useRef } from 'react';
+import { API_ENDPOINTS } from "../config/api";
 import "../styles/Testimonials.css";
 
-const testimonials = [
-  {
-    name: "HG Hridaya Chaitanya Prabhu",
-    role: "GBC, Europe",
-    image: "/images/HG-Hridaya-Chaitanya-Prabhu.jpg",
-    message: "Your polishing work is of high quality.",
-  },
-  {
-    name: "HG Radhe Shyam Prabhu",
-    role: "Temple President, ISKCON Pune",
-    image: "/images/HG-Radhe-Shyam-Prabhu.jpg",
-    message:
-      "When I had gone to Ujjain, I was deeply inspired by the gold-leafed small size altars which I felt our grihasthas in our community may appreciate very much.",
-  },
-  {
-    name: "HG Gauranga Prabhu",
-    role: "ISKCON GBC, India",
-    image: "/images/Gauranga-Prabhu.webp",
-    message:
-      "HG Gauranga Prabhu visited our temple and very much appreciated our humble service attempts. He emphasized that for the future growth of ISKCON, it is important that ISKCON funds remain within the society, helping us become a self-sufficient movement. He also introduced us to HH Radhanath Swami Maharaja.",
-  },
-  {
-    name: "HG Hridaya Chaitanya Prabhu",
-    role: "GBC, Europe",
-    image: "/images/HG-Hridaya-Chaitanya-Prabhu.jpg",
-    message: "Your polishing work is of high quality.",
-  },
-  {
-    name: "HG Radhe Shyam Prabhu",
-    role: "Temple President, ISKCON Pune",
-    image: "/images/HG-Radhe-Shyam-Prabhu.jpg",
-    message:
-      "When I had gone to Ujjain, I was deeply inspired by the gold-leafed small size altars which I felt our grihasthas in our community may appreciate very much.",
-  },
-  {
-    name: "HG Gauranga Prabhu",
-    role: "ISKCON GBC, India",
-    image: "/images/Gauranga-Prabhu.webp",
-    message:
-      "HG Gauranga Prabhu visited our temple and very much appreciated our humble service attempts. He emphasized that for the future growth of ISKCON, it is important that ISKCON funds remain within the society, helping us become a self-sufficient movement. He also introduced us to HH Radhanath Swami Maharaja.",
-  },
-];
-
 export default function Testimonials() {
+  const [testimonials, setTestimonials] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const gridRef = useRef(null);
+
+  // Fetch testimonials from API
+  useEffect(() => {
+    fetchTestimonials();
+  }, []);
+
+  const fetchTestimonials = async () => {
+    try {
+      const response = await fetch(API_ENDPOINTS.testimonials.getAll());
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      console.log("Testimonials API response:", data);
+      
+      if (data.success && data.testimonials && data.testimonials.length > 0) {
+        console.log("Setting testimonials from API:", data.testimonials);
+        setTestimonials(data.testimonials);
+      } else {
+        console.log("No testimonials from API, using fallback");
+        // Fallback to default testimonials if none exist
+        setTestimonials([
+           {
+          id: "1",
+          name: "HG Radhe Shyam Prabhu",
+          role: "Temple President, ISKCON Pune",
+          image: "../../RadheshyamPrabhu.jpg",
+          message: "When I had gone to Ujjain, I was deeply inspired by the gold-leafed small size altars which I felt our grihasthas in our community may appreciate very much.",
+        },
+        {
+          id: "2",
+          name: "HG Gauranga Prabhu",
+          role: "ISKCON GBC, India",
+          image: "../../Gauranga_Das.jpg",
+          message: "HG Gauranga Prabhu visited our temple and very much appreciated our humble service attempts. He emphasized that for the future growth of ISKCON, it is important that ISKCON funds remain within the society, helping us become a self-sufficient movement.",
+        },
+        ]);
+      }
+      setLoading(false);
+    } catch (err) {
+      console.error("Error fetching testimonials:", err);
+      console.log("Using fallback testimonials due to error");
+      // Use fallback testimonials on error
+      setTestimonials([
+       
+        {
+          id: "1",
+          name: "HG Radhe Shyam Prabhu",
+          role: "Temple President, ISKCON Pune",
+          image: "../../RadheshyamPrabhu.jpg",
+          message: "When I had gone to Ujjain, I was deeply inspired by the gold-leafed small size altars which I felt our grihasthas in our community may appreciate very much.",
+        },
+        {
+          id: "2",
+          name: "HG Gauranga Prabhu",
+          role: "ISKCON GBC, India",
+          image: "../../Gauranga_Das.jpg",
+          message: "HG Gauranga Prabhu visited our temple and very much appreciated our humble service attempts. He emphasized that for the future growth of ISKCON, it is important that ISKCON funds remain within the society, helping us become a self-sufficient movement.",
+        },
+      ]);
+      setLoading(false);
+    }
+  };
   
   // Create infinite loop by duplicating testimonials
   const extendedTestimonials = [...testimonials, ...testimonials, ...testimonials];
@@ -62,11 +87,13 @@ export default function Testimonials() {
 
   useEffect(() => {
     // Initialize to middle set on mount
-    setCurrentIndex(startIndex);
-  }, []);
+    if (testimonials.length > 0) {
+      setCurrentIndex(startIndex);
+    }
+  }, [testimonials.length]);
 
   useEffect(() => {
-    if (gridRef.current) {
+    if (gridRef.current && testimonials.length > 0) {
       const cardWidth = 380;
       const gap = 35;
       const containerWidth = gridRef.current.offsetWidth;
@@ -97,11 +124,26 @@ export default function Testimonials() {
 
       return () => clearTimeout(timer);
     }
-  }, [currentIndex]);
+  }, [currentIndex, testimonials.length]);
 
   const getVisibleIndex = (index) => {
     return ((index % testimonials.length) + testimonials.length) % testimonials.length;
   };
+
+  if (loading) {
+    return (
+      <section className="testimonials">
+        <div className="loading-spinner">
+          <div className="spinner"></div>
+          <p>Loading testimonials...</p>
+        </div>
+      </section>
+    );
+  }
+
+  if (testimonials.length === 0) {
+    return null; // Don't show section if no testimonials
+  }
 
   return (
     <section className="testimonials">
@@ -122,10 +164,10 @@ export default function Testimonials() {
         <div className="testimonial-grid" ref={gridRef}>
           {extendedTestimonials.map((item, index) => (
             <div 
-              key={index}
+              key={`${item.id}-${index}`}
               className={`testimonial-card ${index === startIndex + currentIndex ? 'active' : ''}`}
             >
-              <img src={item.image} alt={item.name} />
+              {item.image && <img src={item.image} alt={item.name} />}
               <p className="testimonial-text">"{item.message}"</p>
               <div className="testimonial-author">
                 <strong>{item.name}</strong>

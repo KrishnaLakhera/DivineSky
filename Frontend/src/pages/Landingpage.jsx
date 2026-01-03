@@ -44,7 +44,7 @@ const LandingPage = () => {
     { 
       title: "Laser Engravings", 
       slug: "Laser_Engravings", 
-      image: "../../LaserEngravings.jpeg" 
+      image: "../../laser_engravings.jpeg" 
     },
     { 
       title: "Spiritual Furniture", 
@@ -59,7 +59,7 @@ const LandingPage = () => {
     { 
       title: "Mridangam Stand", 
       slug: "mridanga_stand", 
-      image: "../../MridangamStand.jpeg"
+      image: "../../mridangamStand.jpeg"
     },
   ];
 

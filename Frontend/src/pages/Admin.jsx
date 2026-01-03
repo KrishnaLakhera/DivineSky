@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import Upload from "../components/Admin_Components/Upload";
 import ManageProducts from "../components/Admin_Components/ManageProducts";
@@ -22,7 +22,7 @@ export default function Admin() {
           <h1>Admin Dashboard</h1>
           <p>Manage your products and content</p>
         </div>
-        
+       
         <button 
           className="admin-logout-btn" 
           onClick={handleLogout}
@@ -59,6 +59,19 @@ export default function Admin() {
                 <h3 className="card-title">Manage Products</h3>
                 <p className="card-description">
                   Add 3D models to existing products or manage catalog
+                </p>
+                <div className="card-arrow">→</div>
+              </div>
+
+              {/* Manage Testimonials Card */}
+              <div 
+                className="dashboard-card"
+                onClick={() => navigate("/admin/testimonials")}
+              >
+                <div className="card-icon">💬</div>
+                <h3 className="card-title">Manage Testimonials</h3>
+                <p className="card-description">
+                  Add and manage testimonials from devotees
                 </p>
                 <div className="card-arrow">→</div>
               </div>

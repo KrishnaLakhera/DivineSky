@@ -75,12 +75,14 @@ export default function ProductDetail() {
   const handleWhatsAppOrder = () => {
     if (!product) return;
 
+    const productUrl = window.location.href;  
     const message = `Hello! I'm interested in ordering this product:
 
 📦 *${product.name}*
 💰 Price: ${formatPrice(product.price)}
 🆔 Product ID: ${product.id}
 📂 Category: ${getCategoryLabel(product.category)}
+🔗 Product Link: ${productUrl}
 
 ${product.images && product.images.length > 0 ? `\n🖼️ Product Image: ${product.images[0].url}` : ''}
 
