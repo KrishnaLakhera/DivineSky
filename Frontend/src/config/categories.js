@@ -11,10 +11,13 @@ export const CATEGORIES = [
     value: "altars", 
     label: "Home Altars",
     subCategories: [
-      { value: "medium", label: "Medium Size" },
-      { value: "small", label: "Small Size" },
-      { value: "large", label: "Large Size" },
-      { value: "tovp", label: "TOVP Style Altar" },
+      { value: "small_white", label: "Small White Altars" },
+      { value: "small", label: "Small Brown Altars" },
+      { value: "medium_white", label: "Medium White Altars" },
+      { value: "medium", label: "Medium Brown Altars" },
+      { value: "large_white", label: "Large White Altars" },
+      { value: "large", label: "Large Brown Altars" },
+      { value: "tovp", label: "TOVP Style Altars" },
     ]
   },
   {
@@ -68,6 +71,7 @@ export const CATEGORIES = [
     label: "Mridangam Stand",
     subCategories: [
       { value: "mridangam-stand", label: "Mridangam Stand" },
+      { value: "lotus", label: "Lotus" },
     ]
   },
   {

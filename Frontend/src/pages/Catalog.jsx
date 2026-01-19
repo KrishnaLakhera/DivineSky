@@ -100,7 +100,7 @@ export default function Catalog({ search }) {
       } else {
         // 🔧 FIX: Fetch specific category with increased limit to get ALL products
         const response = await fetch(
-          `${API_ENDPOINTS.products.getByCategory(category)}?limit=100`, // Added limit parameter
+          `${API_ENDPOINTS.products.getByCategory(category)}?limit=1000`, // Added limit parameter
           { 
             signal: AbortSignal.timeout(10000),
             headers: {
@@ -259,16 +259,19 @@ export default function Catalog({ search }) {
                     {subCat.label}
                     <span className="product-count-badge">({subCategoryProducts.length})</span>
                   </h3>
-                  <button 
+                  
+                </div>
+                <button 
                     className="view-all-btn"
                     onClick={() => handleSubCategoryChange(subCat.value)}
                   >
                     View All →
                   </button>
-                </div>
-                {/* Show up to 10 products in the preview */}
+                {/* Show up to 3 products in the preview */}
                 <ProductGrid products={subCategoryProducts.slice(0, 3)} />
+                
               </div>
+              
             );
           })}
         </div>
