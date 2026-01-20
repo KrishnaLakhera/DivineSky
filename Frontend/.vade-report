@@ -1,0 +1,47 @@
+## Vercel Web Analytics Implementation
+
+### Summary
+Successfully implemented Vercel Web Analytics for the DivineSky frontend project. This enables tracking of visitor data, page views, and analytics that can be viewed in the Vercel dashboard.
+
+### Changes Made
+
+#### Files Modified:
+1. **Frontend/package.json**
+   - Added `@vercel/analytics` (^1.6.1) as a new dependency
+
+2. **Frontend/src/App.jsx**
+   - Imported `Analytics` component from `@vercel/analytics/react`
+   - Wrapped the Routes component with a fragment
+   - Added `<Analytics />` component after Routes to enable analytics tracking across all pages
+
+#### Files Created:
+- None (using existing component structure)
+
+### Implementation Details
+
+The implementation follows the official Vercel Web Analytics guide for React applications without Next.js. Key decisions made:
+
+1. **Package Selection**: Used `@vercel/analytics/react` which is the appropriate export for plain React applications (not Next.js)
+
+2. **Placement**: Added the Analytics component at the root level of the App component, after the Routes, ensuring it captures analytics for all pages regardless of route
+
+3. **Fragment Wrapper**: Used a React fragment (`<>...</>`) to wrap the Routes and Analytics components, maintaining the single root element requirement
+
+### Prerequisites Completion
+✅ Vercel account (assumed to be in place)
+✅ Vercel project connected
+✅ Analytics enabled in Vercel dashboard (user responsibility)
+
+### Next Steps for User
+1. Enable Web Analytics in Vercel Dashboard:
+   - Go to dashboard → select Project → Analytics tab → click Enable
+2. Deploy the app to Vercel using `vercel deploy`
+3. Once deployed, analytics will start tracking automatically
+4. View analytics data in the Vercel dashboard after a few days of traffic
+
+### Verification
+- ✅ Build completed successfully with no new errors
+- ✅ All dependencies properly installed
+- ✅ No breaking changes to existing functionality
+- ✅ Code follows React best practices
+- ✅ No linting errors introduced in modified files
