@@ -10,4 +10,4 @@ jobs:
 
     steps:
       - name: Ping backend
-        run: curl -H "User-Agent: Mozilla/5.0" https://divinesky-613l.onrender.com
+        run: curl -I https://divinesky-613l.onrender.com/health
