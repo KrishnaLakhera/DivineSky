@@ -4,6 +4,16 @@ import { useAuth } from "../context/AuthContext";
 import { API_ENDPOINTS } from "../config/api";
 import "../styles/Admin/AdminLogin.css";
 
+import { Helmet } from "react-helmet-async";
+
+<Helmet>
+  <title>Divine Sky - ISKCON Ujjain Altars</title>
+  <meta
+    name="description"
+    content="Handcrafted wooden altars, deities, Tulsi tables and temple furniture from ISKCON Ujjain."
+  />
+</Helmet>
+
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

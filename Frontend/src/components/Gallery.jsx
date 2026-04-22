@@ -2,6 +2,17 @@ import { useState, useEffect } from "react";
 import { API_ENDPOINTS } from "../config/api";
 import "../styles/Gallery.css";
 
+import { Helmet } from "react-helmet-async";
+
+<Helmet>
+  <title>Divine Sky - ISKCON Ujjain Altars</title>
+  <meta
+    name="description"
+    content="Handcrafted wooden altars, deities, Tulsi tables and temple furniture from ISKCON Ujjain."
+  />
+</Helmet>
+
+
 export default function Gallery() {
   // Static fallback data - shows immediately
   const staticGalleryData = {

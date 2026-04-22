@@ -1,6 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import "../styles/GallerySection.css";
 
+import { Helmet } from "react-helmet-async";
+
+<Helmet>
+  <title>Divine Sky - ISKCON Ujjain Altars</title>
+  <meta
+    name="description"
+    content="Handcrafted wooden altars, deities, Tulsi tables and temple furniture from ISKCON Ujjain."
+  />
+</Helmet>
+
+
 const images = [
   "/SP.jpg",
   "/bcsm.jpeg",

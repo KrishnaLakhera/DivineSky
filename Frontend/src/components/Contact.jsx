@@ -1,5 +1,16 @@
 import "../styles/Contact.css";
 
+import { Helmet } from "react-helmet-async";
+
+<Helmet>
+  <title>Divine Sky - ISKCON Ujjain Altars</title>
+  <meta
+    name="description"
+    content="Handcrafted wooden altars, deities, Tulsi tables and temple furniture from ISKCON Ujjain."
+  />
+</Helmet>
+
+
 export default function Contact() {
   return (
     <div className="contact-page">

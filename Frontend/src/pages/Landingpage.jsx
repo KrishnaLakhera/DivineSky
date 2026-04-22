@@ -4,6 +4,17 @@ import CategoryGallery from "../components/Category_Gallery_Components/CategoryG
 import "../styles/Landingpage.css";
 import GallerySection from "../components/GallerySection";
 
+import { Helmet } from "react-helmet-async";
+
+<Helmet>
+  <title>Divine Sky - ISKCON Ujjain Altars</title>
+  <meta
+    name="description"
+    content="Handcrafted wooden altars, deities, Tulsi tables and temple furniture from ISKCON Ujjain."
+  />
+</Helmet>
+
+
 const LandingPage = () => {
   const navigate = useNavigate();
 
