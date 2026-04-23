@@ -77,7 +77,9 @@ const LandingPage = () => {
 
   return (
     <>
+    <main>
       <HeroSection onExploreClick={NavigateCatalog} />
+      </main>
       <Bridge />
       <CategoryGallery 
         categories={categories} 
