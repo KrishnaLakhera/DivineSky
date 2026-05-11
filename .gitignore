@@ -4,10 +4,11 @@ backend/.env
 backend/.env.*
 
 # Frontend
-Frontend/node_modules/
+Frontend/node_modules
 Frontend/dist/
 Frontend/.env
 Frontend/.env.*
 
 # Common
 .DS_Store
+node_modules/
