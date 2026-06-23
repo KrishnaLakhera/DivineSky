@@ -29,7 +29,8 @@ router.put(
       const { 
         name, 
         price, 
-        description, 
+        description,
+        hidden, 
         includeModel, 
         removeModel, 
         removeVideo,
@@ -115,6 +116,12 @@ router.put(
       // ✅ ALWAYS update subcategory
       existingProduct.subCategory = subCategory || null;
       console.log("Updated subcategory:", existingProduct.subCategory);
+
+      // Update hidden status
+    if (hidden !== undefined) {
+      existingProduct.hidden = hidden === "true";
+      console.log("Updated hidden status:", existingProduct.hidden);
+    }
 
       // ✅ NEW: Update altar specifications
       if (targetCategory === "altars") {
@@ -424,6 +431,10 @@ router.patch(
 
       const product = data.products[id];
 
+      if (product.hidden === undefined) {
+      product.hidden = false;
+      }
+      
       if (!product.images || !Array.isArray(product.images)) {
         return res.status(400).json({
           success: false,
