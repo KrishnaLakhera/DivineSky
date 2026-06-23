@@ -124,19 +124,21 @@ router.get("/:category", async (req, res) => {
       });
     }
 
-    let productsArray = Object.values(data.products || {}).map((p) => ({
-      ...p,
-      images: Array.isArray(p.images) 
-        ? p.images 
-        : (p.image ? [{ url: p.image, size: p.imageSize, mimetype: p.imageType }] : []),
-      hasModel: !!p.model,
-      hasVideo: !!p.video,
-    }));
+let productsArray = Object.values(data.products || {})
+  .filter((p) => p.hidden !== true)
+  .map((p) => ({
+    ...p,
+    images: Array.isArray(p.images)
+      ? p.images
+      : (p.image ? [{ url: p.image, size: p.imageSize, mimetype: p.imageType }] : []),
+    hasModel: !!p.model,
+    hasVideo: !!p.video,
+  }));
 
-    // Filter by subcategory if provided
-    if (subCategory) {
-      productsArray = productsArray.filter(p => p.subCategory === subCategory);
-    }
+// Filter by subcategory if provided
+if (subCategory) {
+  productsArray = productsArray.filter(p => p.subCategory === subCategory);
+}
 
     // Calculate pagination
     const totalProducts = productsArray.length;
