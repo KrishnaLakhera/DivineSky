@@ -22,6 +22,9 @@ export default function Upload() {
   const [altarSize, setAltarSize] = useState("");
   const [altarDesign, setAltarDesign] = useState("");
 
+  // ✅ NEW: Hide price, show Call/WhatsApp instead
+  const [hidePrice, setHidePrice] = useState(false);
+
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState("");
   const [isUploading, setIsUploading] = useState(false);
@@ -181,6 +184,9 @@ export default function Upload() {
     formData.append("subCategory", subCategory);
     formData.append("includeModel", includeModel);
 
+    // ✅ NEW: Hide price, show Call/WhatsApp instead
+    formData.append("hidePrice", hidePrice ? "true" : "false");
+
     // Add altar specifications if category is altars
     if (category === "altars") {
       formData.append("altarSize", altarSize);
@@ -194,6 +200,7 @@ export default function Upload() {
       console.log("Altar Size:", altarSize);
       console.log("Altar Design:", altarDesign);
     }
+    console.log("Hide Price:", hidePrice);
     console.log("Model:", includeModel ? (model ? model.name : "No model") : "Model not included");
     console.log("Images:", images.length);
     console.log("Video:", video ? video.name : "No video");
@@ -262,6 +269,7 @@ export default function Upload() {
     setSubCategory("");
     setAltarSize("");
     setAltarDesign("");
+    setHidePrice(false);
     setProgress(0);
     setStatus("");
   };
@@ -430,6 +438,27 @@ export default function Upload() {
               className="form-input"
               disabled={isUploading}
             />
+          </div>
+
+          {/* ✅ NEW: Hide price, show Call/WhatsApp instead */}
+          <div className="checkbox-section">
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={hidePrice}
+                onChange={(e) => setHidePrice(e.target.checked)}
+                disabled={isUploading}
+                className="checkbox-input"
+              />
+              <span className="checkbox-text">
+                📞 Hide price (show Call / WhatsApp instead)
+              </span>
+            </label>
+            <span className="placeholder-hint">
+              {hidePrice
+                ? 'Customers will see "📞 Call / WhatsApp: +91 97136 00059" instead of the price.'
+                : "The price above will still be saved and can be shown again later."}
+            </span>
           </div>
 
           {/* Category with subcategories */}
