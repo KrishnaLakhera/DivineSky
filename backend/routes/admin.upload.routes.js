@@ -13,7 +13,7 @@ const router = express.Router();
 /**
  * 🔐 POST /admin/upload
  * Upload product with optional GLB model, 1-5 images, optional video, subcategory, and altar specifications
- * ✅ UPDATED: Now supports subcategories and altar specifications
+ * ✅ UPDATED: Now supports subcategories, altar specifications, and isHidden flag
  */
 router.post(
   "/upload",
@@ -35,7 +35,8 @@ router.post(
         subCategory,
         includeModel,
         altarSize,      // ✅ NEW: Altar size
-        altarDesign     // ✅ NEW: Altar design
+        altarDesign,    // ✅ NEW: Altar design
+        isHidden        // ✅ NEW: Hide product from customers
       } = req.body;
       
       const modelFile = req.files?.model?.[0];
@@ -92,6 +93,9 @@ router.post(
       // Check if user wants to include model
       const shouldIncludeModel = includeModel === "true" || includeModel === true;
 
+      // ✅ NEW: Check if product should be hidden from customers
+      const shouldBeHidden = isHidden === "true" || isHidden === true;
+
       // Upload model to R2 if provided and checkbox is checked
       let modelResult = null;
       if (shouldIncludeModel && modelFile) {
@@ -144,6 +148,7 @@ router.post(
         subCategory: subCategory || null,
         images: imageResults,
         hasModel: !!modelResult,
+        isHidden: shouldBeHidden, // ✅ NEW: Hide product from customers
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       };
@@ -180,6 +185,7 @@ router.post(
       console.log("✅ Product uploaded successfully:", productId);
       console.log("   Category:", category);
       console.log("   SubCategory:", subCategory || "None");
+      console.log("   Hidden:", shouldBeHidden);
       if (category === "altars") {
         console.log("   Altar Size:", altarSize);
         console.log("   Altar Design:", altarDesign);
@@ -202,8 +208,8 @@ router.post(
 
 /**
  * 🔐 PUT /admin/products/:category/:id
- * Update product (supports category change, subcategory, and altar specifications)
- * ✅ UPDATED: Now supports altar specifications
+ * Update product (supports category change, subcategory, altar specifications, and isHidden)
+ * ✅ UPDATED: Now supports altar specifications and isHidden flag
  */
 router.put(
   "/products/:category/:id",
@@ -229,10 +235,11 @@ router.put(
         inReadyStock,
         readyStockQuantity,
         altarSize,      // ✅ NEW: Altar size
-        altarDesign     // ✅ NEW: Altar design
+        altarDesign,    // ✅ NEW: Altar design
+        isHidden        // ✅ NEW: Hide product from customers
       } = req.body;
 
-      console.log("📝 Update request:", { category, id, newCategory, altarSize, altarDesign });
+      console.log("📝 Update request:", { category, id, newCategory, altarSize, altarDesign, isHidden });
 
       const modelFile = req.files?.model?.[0];
       const imageFiles = req.files?.images || [];
@@ -270,6 +277,11 @@ router.put(
       if (price !== undefined) product.price = parseFloat(price);
       if (description !== undefined) product.description = description.trim();
       if (subCategory !== undefined) product.subCategory = subCategory || null;
+
+      // ✅ NEW: Update isHidden flag
+      if (isHidden !== undefined) {
+        product.isHidden = isHidden === "true" || isHidden === true;
+      }
 
       // ✅ NEW: Update altar specifications
       if (targetCategory === "altars") {

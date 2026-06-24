@@ -12,8 +12,8 @@ const router = express.Router();
 
 /**
  * 🔐 PUT /admin/products/:category/:id
- * Update existing product - FIXED for category changes + Ready Stock support + Altar Specifications
- * ✅ UPDATED: Now supports altar specifications
+ * Update existing product - FIXED for category changes + Ready Stock support + Altar Specifications + isHidden
+ * ✅ UPDATED: Now supports altar specifications and isHidden flag
  */
 router.put(
   "/products/:category/:id",
@@ -39,9 +39,11 @@ router.put(
         // Ready Stock fields
         inReadyStock,
         readyStockQuantity,
-        // ✅ NEW: Altar specifications
+        // ✅ Altar specifications
         altarSize,
-        altarDesign
+        altarDesign,
+        // ✅ NEW: Hide product from customers
+        isHidden
       } = req.body;
       
       console.log("=== UPDATE PRODUCT REQUEST ===");
@@ -51,13 +53,14 @@ router.put(
       console.log("Ready Stock:", inReadyStock, "Quantity:", readyStockQuantity);
       console.log("Altar Size:", altarSize);
       console.log("Altar Design:", altarDesign);
+      console.log("Is Hidden:", isHidden);
       console.log("Request body:", req.body);
 
       // Check if changing category
       const isChangingCategory = newCategory && newCategory !== category;
       const targetCategory = isChangingCategory ? newCategory : category;
       
-      // ✅ NEW: Validate altar specifications if target category is altars
+      // ✅ Validate altar specifications if target category is altars
       if (targetCategory === "altars") {
         if (!altarSize || !altarDesign) {
           return res.status(400).json({
@@ -116,7 +119,11 @@ router.put(
       existingProduct.subCategory = subCategory || null;
       console.log("Updated subcategory:", existingProduct.subCategory);
 
-      // ✅ NEW: Update altar specifications
+      // ✅ NEW: ALWAYS update isHidden flag
+      existingProduct.isHidden = isHidden === "true" || isHidden === true;
+      console.log("Updated isHidden:", existingProduct.isHidden);
+
+      // ✅ Update altar specifications
       if (targetCategory === "altars") {
         existingProduct.altarSize = altarSize;
         existingProduct.altarDesign = altarDesign;
@@ -494,6 +501,11 @@ router.get("/products/:category/:id", auth, async (req, res) => {
     // ✅ Ensure category field exists
     if (!product.category) {
       product.category = category;
+    }
+
+    // ✅ NEW: Ensure isHidden field exists (default to false for older products)
+    if (product.isHidden === undefined) {
+      product.isHidden = false;
     }
 
     // 🆕 Check if in ready stock
