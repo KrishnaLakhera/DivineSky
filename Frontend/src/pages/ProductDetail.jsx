@@ -70,6 +70,7 @@ export default function ProductDetail() {
   };
 
   const formatPrice = (price) => {
+    if (product.hidePrice) return "📞 Call / WhatsApp: +91 97136 00059";
     return new Intl.NumberFormat('en-IN', {
       style: 'currency',
       currency: 'INR',

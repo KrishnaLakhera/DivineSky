@@ -10,6 +10,7 @@ export default function ProductCard({
   images, 
   image,
   category,
+  hidePrice,
   hasModel,
 }) {
   const [imageError, setImageError] = useState(false);
@@ -23,6 +24,7 @@ export default function ProductCard({
     images,
     image,
     category,
+    hidePrice,
     hasModel
   };
   
@@ -33,12 +35,15 @@ export default function ProductCard({
 
   // Format price in Indian Rupees
   const formatPrice = (priceValue) => {
-    const numPrice = parseFloat(priceValue) || 0;
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      maximumFractionDigits: 0,
-    }).format(numPrice);
+    if (productData.hidePrice) return "📞 Call / WhatsApp: +91 97136 00059";
+    else {
+      const numPrice = parseFloat(priceValue) || 0;
+      return new Intl.NumberFormat('en-IN', {
+        style: 'currency',
+        currency: 'INR',
+        maximumFractionDigits: 0,
+      }).format(numPrice);
+    }
   };
 
   // Get category display name
