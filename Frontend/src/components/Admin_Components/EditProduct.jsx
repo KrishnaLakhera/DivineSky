@@ -28,6 +28,9 @@ export default function EditProduct() {
   // Ready Stock states
   const [inReadyStock, setInReadyStock] = useState(false);
   const [readyStockQuantity, setReadyStockQuantity] = useState("");
+
+  // ✅ NEW: Hidden from customers
+  const [isHidden, setIsHidden] = useState(false);
   
   // File states
   const [newImages, setNewImages] = useState([]);
@@ -69,6 +72,9 @@ export default function EditProduct() {
         // Set altar specifications if available
         setAltarSize(p.altarSize || "");
         setAltarDesign(p.altarDesign || "");
+
+        // ✅ NEW: Set hidden state
+        setIsHidden(!!p.isHidden);
         
         // Set Ready Stock info
         if (data.readyStock) {
@@ -255,6 +261,71 @@ export default function EditProduct() {
     }
   };
 
+  // ✅ NEW: Quick toggle for hide/unhide without touching the rest of the form.
+  // Sends the full current text fields too, since the backend update routes
+  // expect name/price/description/subCategory on every save.
+  const toggleHidden = async () => {
+    const nextHidden = !isHidden;
+    const confirmMsg = nextHidden
+      ? "Hide this product from customers? It will no longer appear on the storefront."
+      : "Unhide this product? It will become visible to customers again.";
+
+    if (!window.confirm(confirmMsg)) return;
+
+    try {
+      setSaving(true);
+      setMessage({ type: "", text: "" });
+
+      const token = localStorage.getItem("admin_token");
+      const formData = new FormData();
+      formData.append("name", name.trim());
+      formData.append("price", price);
+      formData.append("description", description.trim());
+      formData.append("subCategory", subCategory);
+      formData.append("isHidden", nextHidden ? "true" : "false");
+
+      if (selectedCategory === "altars") {
+        formData.append("altarSize", altarSize);
+        formData.append("altarDesign", altarDesign);
+      }
+
+      formData.append("inReadyStock", inReadyStock ? "true" : "false");
+      if (inReadyStock && readyStockQuantity) {
+        formData.append("readyStockQuantity", readyStockQuantity);
+      }
+
+      const response = await fetch(
+        API_ENDPOINTS.admin.updateProduct(category, id),
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+
+      if (data.success) {
+        setIsHidden(nextHidden);
+        setMessage({
+          type: "success",
+          text: nextHidden ? "✅ Product hidden from customers" : "✅ Product is now visible to customers",
+        });
+        fetchProduct();
+        setTimeout(() => setMessage({ type: "", text: "" }), 2500);
+      } else {
+        setMessage({ type: "error", text: data.message || "Failed to update visibility" });
+      }
+    } catch (err) {
+      console.error("Toggle hidden error:", err);
+      setMessage({ type: "error", text: "Failed to update visibility" });
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const handleSave = async () => {
     if (!name.trim()) {
       setMessage({ type: "error", text: "Name cannot be empty" });
@@ -316,6 +387,9 @@ export default function EditProduct() {
       formData.append("price", price);
       formData.append("description", description.trim());
       formData.append("subCategory", subCategory);
+
+      // ✅ NEW: ALWAYS send visibility state
+      formData.append("isHidden", isHidden ? "true" : "false");
       
       // Altar specifications if category is altars
       if (selectedCategory === "altars") {
@@ -442,6 +516,30 @@ export default function EditProduct() {
         {/* Left Column */}
         <div className="current-info-section">
           <h3>Current Product Details</h3>
+
+          {/* ✅ NEW: Visibility status + quick toggle */}
+          <div className="info-block">
+            <label>Visibility</label>
+            <div className="current-category">
+              <span className={`category-badge ${isHidden ? "badge-hidden" : "badge-visible"}`}>
+                {isHidden ? "🙈 Hidden from customers" : "👁️ Visible to customers"}
+              </span>
+            </div>
+            <button
+              type="button"
+              className="remove-btn"
+              onClick={toggleHidden}
+              disabled={saving}
+              style={{ marginTop: "8px" }}
+            >
+              {isHidden ? "Unhide Product" : "Hide Product"}
+            </button>
+            <small className="form-hint">
+              {isHidden
+                ? "This product is currently hidden and won't show up on the storefront."
+                : "This product is live on the storefront. Hiding it will remove it from customer view immediately."}
+            </small>
+          </div>
           
           <div className="info-block">
             <label>Current Category</label>
@@ -672,6 +770,25 @@ export default function EditProduct() {
               placeholder="Enter product description"
               rows={4}
             />
+          </div>
+
+          {/* ✅ NEW: Hidden from customers toggle (also saved with the main form) */}
+          <div className="form-group ready-stock-section">
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={isHidden}
+                onChange={(e) => setIsHidden(e.target.checked)}
+              />
+              <span className="checkbox-text">
+                🙈 Hide from customers
+              </span>
+            </label>
+            <small className="form-hint">
+              {isHidden
+                ? "Hidden — this product will not appear on the storefront until unchecked and saved."
+                : "Visible — uncheck and save is not needed; check this box to hide the product from customers."}
+            </small>
           </div>
 
           {/* Ready Stock Section */}
