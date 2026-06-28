@@ -62,8 +62,28 @@ export default function ProductCard({
     setImageError(true);
   };
 
+  // ✅ Whole-card navigation
+  const handleCardClick = () => {
+    navigate(`/product/${productData.category}/${productData.id}`);
+  };
+
+  // ✅ Allow keyboard users (Enter/Space) to activate the card
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      handleCardClick();
+    }
+  };
+
   return (
-    <div className="product-card">
+    <div
+      className="product-card"
+      onClick={handleCardClick}
+      onKeyDown={handleKeyDown}
+      role="button"
+      tabIndex={0}
+      style={{ cursor: "pointer" }}
+    >
       {/* Product Image Preview */}
       <div className="product-image">
         {imageError || !productImage ? (
@@ -110,7 +130,10 @@ export default function ProductCard({
           <span className="product-price">{formatPrice(productData.price)}</span>
           <button
             className="product-view-btn"
-            onClick={() => navigate(`/product/${productData.category}/${productData.id}`)}
+            onClick={(e) => {
+              e.stopPropagation(); // prevent double-trigger from bubbling
+              handleCardClick();
+            }}
           >
             View Details →
           </button> 
