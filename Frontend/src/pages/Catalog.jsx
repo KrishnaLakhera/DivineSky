@@ -13,12 +13,9 @@ import "../styles/Catalog/Catalog-responsive.css";
 
 import { Helmet } from "react-helmet-async";
 
-
-
-
 export default function Catalog({ search }) {
-  const [searchParams] = useSearchParams();
-  
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [allProducts, setAllProducts] = useState([]);
   const [displayedProducts, setDisplayedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -47,15 +44,21 @@ export default function Catalog({ search }) {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Read category from URL on mount or when URL changes
+  // Read category & subCategory from URL on mount or when URL changes
   useEffect(() => {
     const categoryFromUrl = searchParams.get("category");
+    const subCategoryFromUrl = searchParams.get("subCategory");
+
     if (categoryFromUrl) {
-      const categoryExists = CATEGORIES.some(cat => cat.value === categoryFromUrl);
+      const categoryExists = CATEGORIES.some((cat) => cat.value === categoryFromUrl);
       if (categoryExists) {
         setSelectedCategory(categoryFromUrl);
       }
+    } else {
+      setSelectedCategory("all");
     }
+
+    setSelectedSubCategory(subCategoryFromUrl || "");
   }, [searchParams]);
 
   // SUPER OPTIMIZED: Use single backend endpoint for "all" category
@@ -71,15 +74,15 @@ export default function Catalog({ search }) {
         // 🚀 Single optimized request to backend - fetch ALL products
         const response = await fetch(
           API_ENDPOINTS.products.getAll(1, 500), // Increased to 500 to ensure we get all products
-          { 
+          {
             signal: AbortSignal.timeout(15000),
             headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            }
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
           }
         );
-        
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -95,26 +98,25 @@ export default function Catalog({ search }) {
         if (data.success && data.products) {
           productsArray = data.products;
         }
-        
+
         setAllProducts(productsArray);
         setDisplayedProducts(productsArray.slice(0, itemsPerPage));
         setHasMore(productsArray.length > itemsPerPage);
-        
-        console.log(`✅ Loaded ${productsArray.length} products in ONE request!`);
 
+        console.log(`✅ Loaded ${productsArray.length} products in ONE request!`);
       } else {
         // 🔧 FIX: Fetch specific category with increased limit to get ALL products
         const response = await fetch(
           `${API_ENDPOINTS.products.getByCategory(category)}?limit=1000`, // Added limit parameter
-          { 
+          {
             signal: AbortSignal.timeout(10000),
             headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
-            }
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
           }
         );
-        
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -128,20 +130,19 @@ export default function Catalog({ search }) {
         const data = await response.json();
 
         if (data.success) {
-          productsArray = Array.isArray(data.products) 
-            ? data.products 
+          productsArray = Array.isArray(data.products)
+            ? data.products
             : Object.values(data.products || {});
         }
-        
+
         console.log(`✅ Loaded ${productsArray.length} products from ${category} category`);
-        
+
         setAllProducts(productsArray);
         setDisplayedProducts(productsArray.slice(0, itemsPerPage));
         setHasMore(productsArray.length > itemsPerPage);
       }
-      
+
       setLoading(false);
-      
     } catch (err) {
       console.error("Fetch error:", err);
       setError(err.message);
@@ -160,7 +161,8 @@ export default function Catalog({ search }) {
   // MEMOIZED: Get filtered products based on search and subcategory
   const filteredProducts = useMemo(() => {
     return allProducts.filter((p) => {
-      const matchesSearch = !search || 
+      const matchesSearch =
+        !search ||
         p.name?.toLowerCase().includes(search.toLowerCase()) ||
         p.category?.toLowerCase().includes(search.toLowerCase());
       const matchesSubCategory = !selectedSubCategory || p.subCategory === selectedSubCategory;
@@ -179,11 +181,11 @@ export default function Catalog({ search }) {
       const nextPage = page + 1;
       const startIndex = page * itemsPerPage;
       const endIndex = startIndex + itemsPerPage;
-      
+
       const filtered = filteredProducts;
       const newProducts = filtered.slice(startIndex, endIndex);
-      
-      setDisplayedProducts(prev => [...prev, ...newProducts]);
+
+      setDisplayedProducts((prev) => [...prev, ...newProducts]);
       setPage(nextPage);
       setHasMore(endIndex < filtered.length);
       setIsLoadingMore(false);
@@ -205,17 +207,37 @@ export default function Catalog({ search }) {
   const handleCategoryChange = (categoryValue) => {
     setSelectedCategory(categoryValue);
     setSelectedSubCategory("");
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // 🔧 Sync URL with selected category
+    if (categoryValue === "all") {
+      setSearchParams({});
+    } else {
+      setSearchParams({ category: categoryValue });
+    }
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   // Handle subcategory change
   const handleSubCategoryChange = (subCategoryValue) => {
     setSelectedSubCategory(subCategoryValue);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // 🔧 Sync URL with selected subcategory (keep category param intact)
+    setSearchParams((prev) => {
+      const params = new URLSearchParams(prev);
+      if (subCategoryValue) {
+        params.set("subCategory", subCategoryValue);
+      } else {
+        params.delete("subCategory");
+      }
+      return params;
+    });
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   // Get current category subcategories
-  const currentCategory = CATEGORIES.find(c => c.value === selectedCategory);
+  const currentCategory = CATEGORIES.find((c) => c.value === selectedCategory);
   const hasSubCategories = currentCategory?.subCategories?.length > 0;
   const hasMultipleSubCategories = currentCategory?.subCategories?.length > 1;
 
@@ -227,12 +249,14 @@ export default function Catalog({ search }) {
 
   return (
     <div className="catalog-wrapper">
-
-<Helmet>
-  <title>Catalog | Wooden Altars, Deities & Temple Furniture | Divine Sky</title>
-  <meta name="description" content="Browse Divine Sky's full catalog of handcrafted wooden altars, deities, Vyasasans, Tulsi tables, 3D reliefs, and spiritual furniture." />
-  <link rel="canonical" href="https://divinesky.vercel.app/catalog" />
-</Helmet>
+      <Helmet>
+        <title>Catalog | Wooden Altars, Deities & Temple Furniture | Divine Sky</title>
+        <meta
+          name="description"
+          content="Browse Divine Sky's full catalog of handcrafted wooden altars, deities, Vyasasans, Tulsi tables, 3D reliefs, and spiritual furniture."
+        />
+        <link rel="canonical" href="https://divinesky.vercel.app/catalog" />
+      </Helmet>
 
       {/* Category Bar */}
       <CategoryBar
@@ -256,14 +280,14 @@ export default function Catalog({ search }) {
             <h2>{currentCategory.label}</h2>
             <p>Browse by type or scroll to see all products</p>
           </div>
-          
+
           {currentCategory.subCategories.map((subCat) => {
             const subCategoryProducts = allProducts.filter(
-              p => p.subCategory === subCat.value
+              (p) => p.subCategory === subCat.value
             );
-            
+
             if (subCategoryProducts.length === 0) return null;
-            
+
             return (
               <div key={subCat.value} className="subcategory-section">
                 <div className="subcategory-header">
@@ -271,19 +295,16 @@ export default function Catalog({ search }) {
                     {subCat.label}
                     <span className="product-count-badge">({subCategoryProducts.length})</span>
                   </h3>
-                  
                 </div>
-                <button 
-                    className="view-all-btn"
-                    onClick={() => handleSubCategoryChange(subCat.value)}
-                  >
-                    View All →
-                  </button>
+                <button
+                  className="view-all-btn"
+                  onClick={() => handleSubCategoryChange(subCat.value)}
+                >
+                  View All →
+                </button>
                 {/* Show up to 3 products in the preview */}
                 <ProductGrid products={subCategoryProducts.slice(0, 3)} />
-                
               </div>
-              
             );
           })}
         </div>
@@ -294,10 +315,10 @@ export default function Catalog({ search }) {
         <div className="active-filters">
           <span className="filter-label">Filtered by:</span>
           <span className="filter-tag">
-            {currentCategory?.subCategories.find(s => s.value === selectedSubCategory)?.label}
-            <button 
+            {currentCategory?.subCategories.find((s) => s.value === selectedSubCategory)?.label}
+            <button
               className="filter-remove"
-              onClick={() => setSelectedSubCategory("")}
+              onClick={() => handleSubCategoryChange("")}
               aria-label="Remove filter"
             >
               ✕
@@ -312,11 +333,8 @@ export default function Catalog({ search }) {
           search={search}
           selectedSubCategory={selectedSubCategory}
           selectedCategory={selectedCategory}
-          onClearFilter={() => setSelectedSubCategory("")}
-          onViewAll={() => {
-            setSelectedCategory("all");
-            setSelectedSubCategory("");
-          }}
+          onClearFilter={() => handleSubCategoryChange("")}
+          onViewAll={() => handleCategoryChange("all")}
         />
       )}
 
@@ -326,7 +344,7 @@ export default function Catalog({ search }) {
           <div className="catalog-stats">
             <p>
               Showing {displayedProducts.length} of {filteredProducts.length} product
-              {filteredProducts.length !== 1 ? 's' : ''}
+              {filteredProducts.length !== 1 ? "s" : ""}
             </p>
           </div>
 

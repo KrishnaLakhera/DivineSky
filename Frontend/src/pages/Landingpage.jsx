@@ -17,12 +17,12 @@ const LandingPage = () => {
   const categories = [
     { title: "Home Altars",            slug: "altars",                 image: "../../HomeAltar.jpeg" },
     { title: "Temple Altars",          slug: "temple_altar",           image: "../../TempleAltar.jpeg" },
-    { title: "Prabhupada Altars",      slug: "sp_altar",               image: "../../PrabhupadaAltar.jpeg" },
+    { title: "Prabhupada Altars",      slug: "Prabhupada_altars",      image: "../../PrabhupadaAltar.jpeg" },
     { title: "Deities",                slug: "deities",                image: "../../Deity.jpeg" },
     { title: "3D Reliefs",             slug: "sculptures",             image: "../../3dReliefs.jpeg" },
     { title: "Laser Engravings",       slug: "Laser_Engravings",       image: "../../laser_engravings.jpeg" },
     { title: "Spiritual Furniture",    slug: "furniture",              image: "../../furniture.jpeg" },
-    { title: "Tulsi Table & Vyasasan", slug: "tulsi_table_vyasasan",   image: "../../TulsiTable.jpeg" },
+    { title: "Tulsi Table & Vyasasan", slug: "tulsi_table_vyasasna",   image: "../../TulsiTable.jpeg" },
     { title: "Mridangam Stand",        slug: "mridanga_stand",         image: "../../mridangamStand.jpeg" },
   ];
 
