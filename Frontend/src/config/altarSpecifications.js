@@ -30,7 +30,8 @@ export const ALTAR_SPECIFICATIONS = {
       { value: "peacock", label: "Peacock Design" },
       { value: "tovp", label: "TOVP" },
       { value: "chittagong", label: "Chittagong" },
-      { value: "vrindavan", label: "Vrindavan" }
+      { value: "vrindavan", label: "Vrindavan" },
+      { value: "custom", label: "Custom Design" }
     ]
   }
 };
