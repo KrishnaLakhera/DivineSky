@@ -5,6 +5,7 @@ const {
   uploadToR2,
   getJsonFromR2,
   putJsonToR2,
+  deleteFromR2,
 } = require("../services/r2.service");
 
 const router = express.Router();
@@ -15,8 +16,8 @@ const READY_STOCK_KEY = "products/ready-stock.json";
  * 🔐 PUT /admin/products/:category/:id
  * Update product (supports category change, subcategory, altar specifications, isHidden, ready stock)
  */
-router.post(
-  "/upload",
+router.put(
+  "/products/:category/:id",
   auth,
   upload.fields([
     { name: "model", maxCount: 1 },
@@ -196,6 +197,7 @@ router.post(
       if (!readyStockData) {
         readyStockData = {
           products: {},
+          last_updated: new Date().toISOString(),
         };
       }
 
