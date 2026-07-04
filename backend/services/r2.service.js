@@ -17,6 +17,7 @@ const r2Client = new S3Client({
     secretAccessKey: process.env.R2_SECRET_ACCESS_KEY,
   },
   requestChecksumCalculation: "WHEN_REQUIRED",
+  responseChecksumValidation: "WHEN_REQUIRED",
 });
 
 console.log("🔧 R2 Client initialized");
@@ -67,6 +68,7 @@ async function uploadToR2(file, category) {
       Body: file.buffer,
       ContentType: file.mimetype || "application/octet-stream",
       ContentLength: file.size || file.buffer.length,
+      ChecksumAlgorithm: undefined,
       Metadata: {
         originalName: file.originalname,
         category: category,
