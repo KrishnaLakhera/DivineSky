@@ -26,6 +26,21 @@ console.log("Bucket:", process.env.R2_BUCKET_NAME);
 console.log("Public URL:", process.env.R2_PUBLIC_URL);
 
 /**
+ * Sanitize a filename for safe use as an HTTP header value (S3/R2 metadata).
+ * HTTP headers must be ASCII/Latin-1. Non-ASCII characters (smart quotes,
+ * en/em dashes, emojis, accented letters, etc.) get hashed differently by
+ * the AWS SigV4 signer than they are actually transmitted over the wire by
+ * Node's HTTP layer, which produces a "SignatureDoesNotMatch" error from S3
+ * / R2 — even though credentials and everything else are correct.
+ */
+function sanitizeForHeader(value) {
+  if (!value) return "";
+  return value
+    .replace(/[^\x20-\x7E]/g, "-") // strip/replace anything outside printable ASCII
+    .trim();
+}
+
+/**
  * Upload file to R2 (GLB, images, JSON, etc.)
  */
 async function uploadToR2(file, category) {
@@ -59,7 +74,23 @@ async function uploadToR2(file, category) {
       );
     }
 
-    // Generate unique filename
+    // ⚠️ IMPORTANT: sanitize the filename before it's ever used in an S3
+    // metadata header. The raw originalname can contain non-ASCII bytes
+    // (e.g. an en-dash "–" from filenames like "10–15 second"), which
+    // breaks SigV4 signature verification on R2. This was the root cause
+    // of video uploads failing with "SignatureDoesNotMatch" while image
+    // uploads (with plain-ASCII filenames) worked fine.
+    const safeOriginalName = sanitizeForHeader(file.originalname);
+    if (safeOriginalName !== file.originalname) {
+      console.warn(
+        `⚠️ originalname contained non-ASCII characters and was sanitized.`
+      );
+      console.warn(`   before: ${file.originalname}`);
+      console.warn(`   after:  ${safeOriginalName}`);
+    }
+
+    // Generate unique filename (uses extension from the raw name, which is fine —
+    // extensions are always ASCII)
     const fileExtension = path.extname(file.originalname);
     console.log("📝 File extension extracted:", fileExtension);
 
@@ -75,11 +106,9 @@ async function uploadToR2(file, category) {
       Body: file.buffer,
       ContentType: file.mimetype || "application/octet-stream",
       // ContentLength intentionally omitted — the SDK computes this directly
-      // from file.buffer.length. Manually setting it caused a mismatch with
-      // the signed request for larger files (videos), producing R2's
-      // "signature does not match" error.
+      // from file.buffer.length.
       Metadata: {
-        originalName: file.originalname,
+        originalName: safeOriginalName, // sanitized — ASCII-safe for headers
         category: category,
         uploadedAt: new Date().toISOString(),
       },
@@ -101,7 +130,7 @@ async function uploadToR2(file, category) {
       key: key,
       size: file.buffer.length,
       mimetype: file.mimetype,
-      originalName: file.originalname,
+      originalName: safeOriginalName,
     };
   } catch (error) {
     console.error("❌ R2 Upload Error:", error);
