@@ -31,6 +31,9 @@ export default function Upload() {
   const [status, setStatus] = useState("");
   const [isUploading, setIsUploading] = useState(false);
 
+  // Drag & drop UI state for the images dropzone
+  const [isDragging, setIsDragging] = useState(false);
+
   // ─── Spec table ────────────────────────────────────────────────
   const handleSpecChange = (index, field, value) => {
     setSpecs((prev) =>
@@ -60,13 +63,15 @@ export default function Upload() {
     setModel(file);
   };
 
-  const handleImagesChange = (e) => {
-    const files = Array.from(e.target.files);
+  // Shared validation/handling logic for images, regardless of source
+  // (file picker, drag-and-drop, or clipboard paste)
+  const processImageFiles = (fileList) => {
+    const files = Array.from(fileList);
     if (files.length === 0) return;
     if (images.length + files.length > 5) { alert("You can upload a maximum of 5 images"); return; }
     for (const file of files) {
-      if (!file.type.startsWith("image/")) { alert(`${file.name} is not an image file`); return; }
-      if (file.size > 10 * 1024 * 1024) { alert(`${file.name} is larger than 10MB`); return; }
+      if (!file.type.startsWith("image/")) { alert(`${file.name || "File"} is not an image file`); return; }
+      if (file.size > 10 * 1024 * 1024) { alert(`${file.name || "File"} is larger than 10MB`); return; }
     }
     setImages((prev) => [...prev, ...files]);
     files.forEach((file) => {
@@ -74,6 +79,45 @@ export default function Upload() {
       reader.onloadend = () => setPreviews((prev) => [...prev, reader.result]);
       reader.readAsDataURL(file);
     });
+  };
+
+  const handleImagesChange = (e) => {
+    processImageFiles(e.target.files);
+  };
+
+  // Drag and drop handlers for the images dropzone
+  const handleImageDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleImageDragLeave = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleImageDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files?.length) {
+      processImageFiles(e.dataTransfer.files);
+    }
+  };
+
+  // Paste-from-clipboard handler for the images dropzone
+  const handleImagePaste = (e) => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+    const pastedFiles = [];
+    for (const item of items) {
+      if (item.type.startsWith("image/")) {
+        const file = item.getAsFile();
+        if (file) pastedFiles.push(file);
+      }
+    }
+    if (pastedFiles.length > 0) {
+      processImageFiles(pastedFiles);
+    }
   };
 
   const removeImage = (index) => {
@@ -247,9 +291,19 @@ export default function Upload() {
           {/* IMAGES UPLOAD */}
           <div className="file-section">
             <label className="images-label">
-              <div className="images-upload-area">
+              <div
+                className={`images-upload-area ${isDragging ? "dragging" : ""}`}
+                onDragOver={handleImageDragOver}
+                onDragLeave={handleImageDragLeave}
+                onDrop={handleImageDrop}
+                onPaste={handleImagePaste}
+                tabIndex={0}
+                style={isDragging ? { background: "#f0f8ff", borderColor: "#4a90d9" } : undefined}
+              >
                 <div className="upload-icon">📸</div>
-                <p className="placeholder-text">Click to upload images ({images.length}/5)</p>
+                <p className="placeholder-text">
+                  Drag & drop, paste (Ctrl+V), or click to upload images ({images.length}/5)
+                </p>
                 <span className="placeholder-hint">PNG, JPG up to 10MB each · Required</span>
               </div>
               <input type="file" accept="image/*" multiple onChange={handleImagesChange} style={{ display: "none" }} disabled={isUploading || images.length >= 5} />
