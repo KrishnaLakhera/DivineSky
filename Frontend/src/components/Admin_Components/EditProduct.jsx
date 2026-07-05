@@ -38,6 +38,9 @@ export default function EditProduct() {
   const [newVideo, setNewVideo] = useState(null);
   const [imagePreviews, setImagePreviews] = useState([]);
 
+  // Drag & drop / paste UI state for the image dropzone
+  const [isDragging, setIsDragging] = useState(false);
+
   useEffect(() => {
     fetchProduct();
   }, [category, id]);
@@ -115,8 +118,15 @@ export default function EditProduct() {
   };
 
   // ─── File handlers ─────────────────────────────────────────────
-  const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
+
+  // Shared validation/handling logic for images, regardless of source
+  // (file picker, drag-and-drop, or clipboard paste)
+  const processImageFiles = (fileList) => {
+    const files = Array.from(fileList).filter((f) => f.type.startsWith("image/"));
+    if (files.length === 0) {
+      setMessage({ type: "error", text: "Only image files are allowed" });
+      return;
+    }
     const maxAllowed = replaceImages ? 5 : 10 - (product?.images?.length || 0);
     if (files.length > maxAllowed) {
       setMessage({
@@ -130,6 +140,45 @@ export default function EditProduct() {
     setNewImages(files);
     setImagePreviews(files.map((f) => URL.createObjectURL(f)));
     setMessage({ type: "", text: "" });
+  };
+
+  const handleImageChange = (e) => {
+    processImageFiles(e.target.files);
+  };
+
+  // Drag and drop handlers for the image dropzone
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files?.length) {
+      processImageFiles(e.dataTransfer.files);
+    }
+  };
+
+  // Paste-from-clipboard handler for the image dropzone
+  const handlePaste = (e) => {
+    const items = e.clipboardData?.items;
+    if (!items) return;
+    const pastedFiles = [];
+    for (const item of items) {
+      if (item.type.startsWith("image/")) {
+        const file = item.getAsFile();
+        if (file) pastedFiles.push(file);
+      }
+    }
+    if (pastedFiles.length > 0) {
+      processImageFiles(pastedFiles);
+    }
   };
 
   const handleModelChange = (e) => {
@@ -756,7 +805,37 @@ export default function EditProduct() {
                 <span>Replace all images</span>
               </label>
             </div>
-            <input type="file" accept="image/*" multiple onChange={handleImageChange} className="file-input" />
+
+            <div
+              className={`image-dropzone ${isDragging ? "dragging" : ""}`}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+              onPaste={handlePaste}
+              tabIndex={0}
+              style={{
+                border: "2px dashed #ccc",
+                borderRadius: "8px",
+                padding: "24px",
+                textAlign: "center",
+                cursor: "pointer",
+                background: isDragging ? "#f0f8ff" : "transparent",
+                outline: "none",
+              }}
+            >
+              <p style={{ margin: 0, color: "#666" }}>
+                📎 Drag & drop images here, paste (Ctrl+V), or click below
+              </p>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleImageChange}
+                className="file-input"
+                style={{ marginTop: "12px" }}
+              />
+            </div>
+
             <small className="form-hint">
               {replaceImages
                 ? "Max 5 images — will delete all existing images"
