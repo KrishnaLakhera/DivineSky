@@ -7,7 +7,7 @@ import Contact from "./components/Contact";
 import About from "./components/About";
 import Footer from "./components/Footer";
 import Testimonials from "./components/Testimonials";
-import MostSelling from "./components/Admin_Components/Mostselling.jsx";
+import MostSelling from "./components/Admin_Components/MostSelling.jsx";
 
 import Catalog from "./pages/Catalog";
 import LandingPage from "./pages/Landingpage";
