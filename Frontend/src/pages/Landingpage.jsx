@@ -24,6 +24,7 @@ const LandingPage = () => {
     { title: "Spiritual Furniture",    slug: "furniture",              image: "../../furniture.jpeg" },
     { title: "Tulsi Table & Vyasasan", slug: "tulsi_table_vyasasna",   image: "../../TulsiTable.jpeg" },
     { title: "Mridangam Stand",        slug: "mridanga_stand",         image: "../../mridangamStand.jpeg" },
+    { title: "Gift Items",             slug: "gifts",                  image: "../../gifts.jpeg" },
   ];
 
   return (

@@ -57,7 +57,7 @@ router.post(
       }
 
       const validCategories = [
-        "altars", "deities", "sculptures", "Laser_Engravings",
+        "altars", "deities", "sculptures", "Laser_Engravings", "gifts",
         "furniture", "tulsi_table_vyasasna", "mridanga_stand",
         "Prabhupada_altars", "temple_altar",
       ];

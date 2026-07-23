@@ -97,6 +97,13 @@ export const CATEGORIES = [
       {value: "x", label: "y" }, 
     ]
   },
+  { 
+    value: "gifts", 
+    label: "Gift Items",
+    subCategories: [
+     { value: "gifts", label: "Gift Items" },
+    ]
+  },
 ];
 
 // Helper function to get category label by value
