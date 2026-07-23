@@ -25,7 +25,7 @@ router.get("/", async (req, res) => {
     const limit = parseInt(req.query.limit) || 20;
     const subCategory = req.query.subCategory || "";
     
-    const categories = ["altars", "deities", "sculptures", "Laser_Engravings", "furniture", "tulsi_table_vyasasna","mridanga_stand","Prabhupada_altars","temple_altar"];
+    const categories = ["altars", "deities", "sculptures", "Laser_Engravings", "furniture","gifts", "tulsi_table_vyasasna","mridanga_stand","Prabhupada_altars","temple_altar"];
     const allProducts = [];
 
     for (const category of categories) {
@@ -102,7 +102,7 @@ router.get("/:category", async (req, res) => {
     const subCategory = req.query.subCategory || "";
     
     // Validate category
-    const validCategories = ["altars", "deities", "sculptures", "Laser_Engravings", "furniture", "tulsi_table_vyasasna","mridanga_stand","Prabhupada_altars","temple_altar"];
+    const validCategories = ["altars", "deities", "sculptures", "Laser_Engravings", "furniture","gifts", "tulsi_table_vyasasna","mridanga_stand","Prabhupada_altars","temple_altar"];
     if (!validCategories.includes(category)) {
       return res.status(400).json({
         success: false,
@@ -187,7 +187,7 @@ router.get("/:category/:id", async (req, res) => {
     const { category, id } = req.params;
     
     // Validate category
-    const validCategories = ["altars", "deities", "sculptures", "Laser_Engravings", "furniture", "tulsi_table_vyasasna","mridanga_stand","Prabhupada_altars","temple_altar"];
+    const validCategories = ["altars", "deities", "sculptures", "Laser_Engravings", "furniture","gifts", "tulsi_table_vyasasna","mridanga_stand","Prabhupada_altars","temple_altar"];
     if (!validCategories.includes(category)) {
       return res.status(400).json({
         success: false,
@@ -258,7 +258,7 @@ router.get("/subcategory/:category/:subCategory", async (req, res) => {
     const limit = parseInt(req.query.limit) || 10; // Default 10 for subcategory view
     
     // Validate category
-    const validCategories = ["altars", "deities", "sculptures", "Laser_Engravings", "furniture", "tulsi_table_vyasasna","mridanga_stand","Prabhupada_altars","temple_altar"];
+    const validCategories = ["altars", "deities", "sculptures", "Laser_Engravings", "furniture","gifts", "tulsi_table_vyasasna","mridanga_stand","Prabhupada_altars","temple_altar"];
     if (!validCategories.includes(category)) {
       return res.status(400).json({
         success: false,
